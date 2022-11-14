@@ -2,7 +2,7 @@ package world;
 
 public class PlayerContract {
 
-    int salary;
+    double salary;
     int yearsRemaining;
     Team team;
 
@@ -16,5 +16,20 @@ public class PlayerContract {
     public void tickYear(){
         yearsRemaining--;
     }
+
+    public double getSalary(){
+        return salary;
+    }
+
+    public int getYearsRemaining(){
+        return yearsRemaining;
+    }
+
+    public void extendContract(double s, int y){
+        salary += team.balance/10;
+        salary *= s;
+        yearsRemaining += y;
+    }
+
 
 }

@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/MobaSim.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/game/Hero.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/game/PickPhase.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/Organization.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/PlayerContract.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/Tournament.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="insane">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/PlayerContract.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/PlayerContract.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Tournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Tournament.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,8 +53,17 @@
       <workItem from="1668130438182" duration="4733000" />
       <workItem from="1668195196723" duration="1544000" />
       <workItem from="1668371315008" duration="351000" />
-      <workItem from="1668417012537" duration="13179000" />
+      <workItem from="1668417012537" duration="13674000" />
+      <workItem from="1668456555012" duration="10860000" />
     </task>
+    <task id="LOCAL-00001" summary="insane">
+      <created>1668430584469</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1668430584469</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -79,5 +79,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="insane" />
+    <option name="LAST_COMMIT_MESSAGE" value="insane" />
   </component>
 </project>

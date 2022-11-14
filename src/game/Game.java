@@ -58,10 +58,14 @@ public class Game {
             if (totalKills > 50){
                 if (direKills > radiantKills){
                     printResult(dire,radiant,teamTwo,teamOne);
+                    teamOne.updateRunningPerf(-1);
+                    teamTwo.updateRunningPerf(1);
                     return teamOne;
                 }
                 else{
                     printResult(radiant,dire,teamOne,teamTwo);
+                    teamTwo.updateRunningPerf(-1);
+                    teamOne.updateRunningPerf(1);
                     return teamTwo;
                 }
             }
