@@ -25,11 +25,11 @@ public class Game {
             if(playGame().equals(teamOne)){
                 t1w++;
             }
-            else{
+            else {
                 t2w++;
             }
-            System.out.println(teamOne + " " + t2w + " - " + t1w + " " + teamTwo);
         }
+        System.out.println(teamOne + " " + t2w + " - " + t1w + " " + teamTwo);
         if(t1w > t2w){
             return teamTwo;
         }
@@ -57,15 +57,15 @@ public class Game {
         while(true){
             if (totalKills > 50){
                 if (direKills > radiantKills){
-                    printResult(dire,radiant,teamTwo,teamOne);
                     teamOne.updateRunningPerf(-1);
                     teamTwo.updateRunningPerf(1);
+                    updatePerf(radiant,dire);
                     return teamOne;
                 }
                 else{
-                    printResult(radiant,dire,teamOne,teamTwo);
                     teamTwo.updateRunningPerf(-1);
                     teamOne.updateRunningPerf(1);
+                    updatePerf(radiant,dire);
                     return teamTwo;
                 }
             }
@@ -96,10 +96,7 @@ public class Game {
 
     }
 
-    public void printResult(ArrayList<InGamePlayer> a, ArrayList<InGamePlayer> b, Team winner, Team loser){
-        System.out.println("-------------------");
-        System.out.println();
-        System.out.println("---" + winner + "---");
+    public void updatePerf(ArrayList<InGamePlayer> a, ArrayList<InGamePlayer> b){
         for(int i = 0; i < 5; i++){
             if(a.get(i).kills > a.get(i).deaths){
                 a.get(i).player.updateNetPerf(1);
@@ -107,20 +104,18 @@ public class Game {
             else if(a.get(i).kills < a.get(i).deaths){
                 a.get(i).player.updateNetPerf(-1);
             }
-            System.out.println(a.get(i));
-        }
-        System.out.println("---" + loser + "---");
-        for(int i = 0; i < 5; i++){
             if(b.get(i).kills > b.get(i).deaths){
                 b.get(i).player.updateNetPerf(1);
             }
             else if(b.get(i).kills < b.get(i).deaths){
                 b.get(i).player.updateNetPerf(-1);
             }
-
-            System.out.println(b.get(i));
         }
-        System.out.println("-------------------");
+
+
+
+
+
     }
     private class InGamePlayer{
         int kills;

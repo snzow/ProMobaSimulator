@@ -1,6 +1,7 @@
 package world;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 public class Player {
 
@@ -17,6 +18,8 @@ public class Player {
     double earnings;
 
     int netPerformance;
+    int yearsWithTeam;
+    ArrayList<yearResults> history;
 
     public Player(String s, int sk, int a){
         name = s;
@@ -25,7 +28,10 @@ public class Player {
         netPerformance = 0;
         earningsY = 0;
         earnings = 0;
-        prevTeam = new Team("T","T");
+        prevTeam = new Team("Free Agent","Free Agent");
+        team = new Team("Free Agent","Free Agent");
+        yearsWithTeam = 0;
+        history = new ArrayList<>();
     }
 
     public Player(String s){
@@ -35,7 +41,10 @@ public class Player {
         netPerformance = 0;
         earningsY = 0;
         earnings = 0;
-        prevTeam = new Team("T","T");
+        team = new Team("Free Agent","Free Agent");
+        prevTeam = new Team("Free Agent","Free Agent");
+        yearsWithTeam = 0;
+        history = new ArrayList<>();
     }
 
     public void signContract(Team t, int sal, int years){
@@ -64,15 +73,25 @@ public class Player {
     }
 
     public double getSalary(){
+        if (contract == null){
+            return 0;
+        }
         return contract.getSalary();
     }
 
     public void yearEndStats(){
         earningsY = 0;
         age++;
-        contract.tickYear();
+        if(contract != null){
+            contract.tickYear();
+        }
+        yearsWithTeam++;
+        history.add(new yearResults());
     }
 
+    public int getYearsWithTeam(){
+        return yearsWithTeam;
+    }
     public void updateSkill(int x){
         skill += x;
     }
@@ -89,6 +108,7 @@ public class Player {
         System.out.println(name + " has been extended by " + team + " for " + formatter.format(getSalary()) + "/" + y);
     }
 
+
     public Team getTeam(){
         return team;
     }
@@ -98,20 +118,72 @@ public class Player {
         }
         team.players.remove(this);
         prevTeam = team;
-        team = null;
+        team = new Team("Free Agent","Free Agent");
         contract = null;
         World.freeAgents.add(this);
+        yearsWithTeam = 0;
     }
 
     public Team getPrevTeam(){
         return prevTeam;
     }
+
+    public void printHistory(){
+        System.out.println("------------");
+        System.out.println(name + " Team | Skill | Tournaments Won(Majors Won) + Salary");
+        int majorsWon = 0;
+        int tourneysWon = 0;
+        double totalEarnings = 0;
+        int tiWon = 0;
+        int year = 1;
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        for (yearResults r : history){
+            if (year != 1){
+                System.out.println( "year " + year + ": " + r.toString());
+            }
+            year++;
+            majorsWon += r.majorsWon;
+            tourneysWon += r.tourneysWon;
+            totalEarnings += r.salary;
+            tiWon += r.ti;
+        }
+        System.out.println("------------");
+        System.out.println(name + " | " + team + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(totalEarnings) + " | " + tiWon + " TI's Won");
+
+        System.out.println("------------");
+    }
     public String toString(){
-        if (team == null){
+        if (team.toString() == "Free Agent"){
             return name;
         }
         return (team.getTag() + "." + name);
     }
 
+    private class yearResults{
+        Team team;
+        double ySkill;
+        int tourneysWon;
+        int majorsWon;
+        int ti;
+        double salary;
+
+        public yearResults(){
+            team = getTeam();
+            ySkill = getSkill();
+            tourneysWon = team.getTourneysWon(0);
+            majorsWon = team.getMajorsWon(0);
+            ti = team.getTiWon(0);
+            salary = getSalary();
+        }
+
+        public String toString(){
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            String z = "";
+            if (ti == 1){
+                z = " TI Winner";
+            }
+            return (name + " | " + team + " | " + ySkill + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(salary) + " | " + z);
+        }
+    }
 
 }

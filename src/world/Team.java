@@ -12,6 +12,11 @@ public class Team {
     double balance;
     double prizeMoneyY;
     int majorsWon;
+    int majorsWonY;
+    int tiWon;
+    int tiWonY;
+    int tourneysWon;
+    int tourneysWonY;
     ArrayList<Integer> resultsY;
 
     double pointsY;
@@ -37,6 +42,18 @@ public class Team {
         players.add(p);
         p.signContract(this, (int) (balance/10),2);
 
+    }
+    public void winTourney(boolean maj,boolean ti){
+        tourneysWon++;
+        tourneysWonY++;
+        if(maj){
+            majorsWon++;
+            majorsWonY++;
+        }
+        if(ti){
+            tiWon++;
+            tiWonY++;
+        }
     }
 
     public Player dropPlayer(Player p){
@@ -70,20 +87,21 @@ public class Team {
             Player p = players.get(i);
             p.payPlayer(p.getSalary());
             balance -= p.getSalary();
-            p.yearEndStats();
-            p.updateNetPerf(getRunningPerf());
-            if (getRunningPerf() < -10){
+            //makes teams make more accurate judgements on extending players
+            //ie. less likely to extend after a bad year, more after a good one
+            int moddedPerf = p.getNetPerf() + getRunningPerf();
+            if (moddedPerf < -10){
                 dropPlayer(p);
             }
             else{
                 if(p.getContractYearsRemaining() == 0){
-                    if (p.getNetPerf() > 10){
+                    if (moddedPerf > 10){
                         p.extendContract(1.5 ,3);
                     }
-                    else if(p.getNetPerf() > 5){
+                    else if(moddedPerf > 5){
                         p.extendContract(1.25,2);
                     }
-                    else if(p.getNetPerf() > 0){
+                    else if(moddedPerf > 0){
                         p.extendContract(1.1,1);
                     }
                     else{
@@ -110,6 +128,9 @@ public class Team {
         pointsL = pointsY/2;
         pointsY = 0;
         payPlayers();
+        tourneysWonY = 0;
+        majorsWonY = 0;
+        tiWonY = 0;
     }
 
     public String getTag(){
@@ -120,11 +141,78 @@ public class Team {
         return players;
     }
 
+    public boolean isFull(){
+        if (players.size() == 5){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param y 0 for tourneysY, 1 for tourneys all time
+     * @return tourneys
+     */
+    public int getTourneysWon(int y){
+        if (y == 1){
+            return tourneysWon;
+        }
+        else{
+            return tourneysWonY;
+        }
+    }
+
+    /**
+     *
+     * @param y 0 for tourneysY, 1 for tourneys all time
+     * @return tourneys
+     */
+    public int getMajorsWon(int y){
+        if (y == 1){
+            return majorsWon;
+        }
+        else{
+            return majorsWonY;
+        }
+    }
+    /**
+     *
+     * @param y 0 for tourneysY, 1 for tourneys all time
+     * @return tourneys
+     */
+    public int getTiWon(int y){
+        if (y == 1){
+            return tiWon;
+        }
+        else{
+            return tiWonY;
+        }
+    }
+    public void printRoster(){
+        System.out.println("-------------");
+        System.out.println(name);
+        System.out.println("-------------");
+        for (int i = 0; i < 5; i++){
+            Player p = players.get(i);
+            if (p.getYearsWithTeam() == 0){
+                System.out.println(players.get(i) + " (new)");
+            }
+            else{
+                System.out.println(players.get(i) + " " + p.getYearsWithTeam() + " year(s) with team");
+            }
+
+        }
+    }
+
     public int getRosterSize(){
         return players.size();
     }
     public String toString(){
-        return name;
+        String z = "";
+        if(tiWonY == 1){
+            z = "*";
+        }
+        return z + name + z;
     }
 
 

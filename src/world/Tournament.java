@@ -3,6 +3,8 @@ package world;
 import game.Game;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Tournament {
     ArrayList<Team> teams;
@@ -10,17 +12,42 @@ public class Tournament {
     String name;
     double prizePool;
     double pointsPool;
+    boolean major;
 
-    public Tournament(String n, double pr, double po){
+
+    public Tournament(String n, double pr, double po, boolean maj){
         name = n;
         prizePool = pr;
         pointsPool = po;
         pastResults = new ArrayList<>();
+        major = maj;
 
     }
 
     public void runTournament(ArrayList<Team> t){
-        teams = t;
+        TournamentResult thisTourney = new TournamentResult();
+        pastResults.add(thisTourney );
+        boolean ti = false;
+        if(!major){
+            teams = new ArrayList<Team>();
+            if (pointsPool < 700){
+                t.sort(Comparator.comparing(Team::getPoints));
+            }
+            else{
+                Collections.shuffle(t);
+            }
+            for(int i = 0; i < 8; i++){
+                teams.add(t.get(i));
+            }
+        }
+        else{
+            t.sort(Comparator.comparing(Team::getPoints,Comparator.reverseOrder()));
+            teams = t;
+            if (name == "The International"){
+                ti = true;
+            }
+        }
+
         int roundsToPlay = 1;
         int numCheck = 2;
         int round = 1;
@@ -50,9 +77,7 @@ public class Tournament {
             System.out.println("Round: " + (i+1));
             System.out.println("------------");
             ArrayList<Team> roundNow = rounds.get(i);
-
             int sizeForRound = roundNow.size() / 2;
-            System.out.println(sizeForRound);
             for (Team b : roundNow){
                 b.updatePoints(pointsPool);
                 b.receivePrizeMoney(prizePool/10);
@@ -66,7 +91,18 @@ public class Tournament {
                     System.out.println("------------");
                     System.out.println(toEdit.winner + " has won " + name);
                     System.out.println("------------");
+                    toEdit.winner.winTourney(major,ti);
                     return;
+                }
+                else if(i >= roundsToPlay -3){
+                    Team one = roundNow.get(j);
+                    Team two = roundNow.get(q);
+                    Team win = g.playSeries(3);
+                    if(win.equals(one)){
+                        if (thisTourney.thirdFourthTwo != null){
+
+                        }
+                    }
                 }
                 else{
                     rounds.get(i+1).add(g.playSeries(2));
@@ -88,6 +124,8 @@ public class Tournament {
             thirdFourthTwo = thirdTwo;
         }
 
+        public TournamentResult(){
+        }
         public TournamentResult(Team w){
             winner = w;
         }
