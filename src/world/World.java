@@ -59,7 +59,9 @@ public class World {
 
     }
 
-
+    /**
+     * runs the free agency process, meant to be done at the end of the year
+     */
     public static void runFreeAgency(){
         showStandingsAwards();
         for (Player p : playerList){
@@ -90,6 +92,7 @@ public class World {
         }
         freeAgents.sort(Comparator.comparing(Player::getSkill,reverseOrder()));
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
+        @SuppressWarnings("unchecked")
         ArrayList<Team> teamsToFA = (ArrayList<Team>) teams.clone();
 
         while (teamsToFA.size() > 0) {
@@ -114,6 +117,9 @@ public class World {
         System.out.println("free agency complete");
     }
 
+    /**
+     * shows the top 10 ranked players by netperformance and top 10 teams by points
+     */
     public static void showStandingsAwards(){
         System.out.println("Year end awards");
         System.out.println("Player Rankings");
@@ -342,6 +348,7 @@ public class World {
         createTournament("The International",1000000, 2000,true);
 
     }
+
     public static int getRandomNumber(int min, int max){
         return (int)Math.floor(Math.random()*(max-min+1)+min);
     }

@@ -5,7 +5,6 @@ import world.Team;
 import world.World;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Game {
 
@@ -41,11 +40,11 @@ public class Game {
     public Team playGame(){
         ArrayList<InGamePlayer> radiant = new ArrayList<>();
         ArrayList<InGamePlayer> dire = new ArrayList<>();
-        ArrayList tmpA = teamOne.getRoster();
-        ArrayList tmpB = teamTwo.getRoster();
+        ArrayList<Player> tmpA = teamOne.getRoster();
+        ArrayList<Player> tmpB = teamTwo.getRoster();
         for(int i = 0; i < 5; i++){
-            InGamePlayer rad = new InGamePlayer((Player)tmpA.get(i));
-            InGamePlayer dir = new InGamePlayer((Player)tmpB.get(i));
+            InGamePlayer rad = new InGamePlayer(tmpA.get(i));
+            InGamePlayer dir = new InGamePlayer(tmpB.get(i));
             radiant.add(rad);
             dire.add(dir);
         }

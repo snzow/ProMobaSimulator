@@ -1,5 +1,7 @@
 package world;
 
+import game.Hero;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -153,7 +155,7 @@ public class Player {
         System.out.println("------------");
     }
     public String toString(){
-        if (team.toString() == "Free Agent"){
+        if (team.toString().equals("Free Agent")){
             return name;
         }
         return (team.getTag() + "." + name);
@@ -183,6 +185,15 @@ public class Player {
                 z = " TI Winner";
             }
             return (name + " | " + team + " | " + ySkill + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(salary) + " | " + z);
+        }
+    }
+    private class HeroAptitude{
+        Hero hero;
+        double aptitude;
+
+        public HeroAptitude(Hero h, double ap){
+            hero = h;
+            aptitude = ap;
         }
     }
 

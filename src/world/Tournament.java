@@ -26,7 +26,7 @@ public class Tournament {
 
     public void runTournament(ArrayList<Team> t){
         TournamentResult thisTourney = new TournamentResult();
-        pastResults.add(thisTourney );
+        pastResults.add(thisTourney);
         boolean ti = false;
         if(!major){
             teams = new ArrayList<Team>();
@@ -86,28 +86,55 @@ public class Tournament {
                 int q = roundNow.size() - 1 - j;
                 Game g = new Game(roundNow.get(j),roundNow.get(q));
                 if (i >= roundsToPlay - 2){
-                    pastResults.add(new TournamentResult(g.playSeries(3)));
-                    TournamentResult toEdit = pastResults.get(pastResults.size() - 1);
+                    Team one = roundNow.get(j);
+                    Team two = roundNow.get(q);
+                    Team win = g.playSeries(3);
+                    Team loss;
+                    if(win.equals(one)){
+                        loss = two;
+                    }
+                    else{
+                        loss = one;
+                    }
+                    thisTourney.winner = win;
+                    thisTourney.setSecond(loss);
                     System.out.println("------------");
-                    System.out.println(toEdit.winner + " has won " + name);
+                    System.out.println(win + " has won " + name);
                     System.out.println("------------");
-                    toEdit.winner.winTourney(major,ti);
+                    win.winTourney(major,ti);
                     return;
                 }
                 else if(i >= roundsToPlay -3){
                     Team one = roundNow.get(j);
                     Team two = roundNow.get(q);
-                    Team win = g.playSeries(3);
+                    Team win = g.playSeries(2);
+                    Team loss;
                     if(win.equals(one)){
-                        if (thisTourney.thirdFourthTwo != null){
-
-                        }
+                        loss = two;
                     }
+                    else{
+                        loss = one;
+                    }
+                    if (thisTourney.thirdFourthTwo != null){
+                        thisTourney.setThirdOne(loss);
+                    }
+                    else{
+                        thisTourney.setThirdTwo(loss);
+                    }
+                    rounds.get(i+1).add(win);
                 }
                 else{
                     rounds.get(i+1).add(g.playSeries(2));
                 }
             }
+        }
+    }
+
+    public void printTournamentHistory(){
+        System.out.println("History: ");
+        int year = 1;
+        for(TournamentResult t : pastResults){
+            System.out.println(t.toString());
         }
     }
 
@@ -140,6 +167,10 @@ public class Tournament {
 
         public void setThirdTwo(Team w){
             thirdFourthTwo = w;
+        }
+
+        public String toString(){
+            return "1st: " + winner + " | 2nd: " + second + " | 3rd/4th: " + thirdFourthOne + ", " + thirdFourthTwo;
         }
     }
 }

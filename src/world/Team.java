@@ -88,7 +88,7 @@ public class Team {
             p.payPlayer(p.getSalary());
             balance -= p.getSalary();
             //makes teams make more accurate judgements on extending players
-            //ie. less likely to extend after a bad year, more after a good one
+            //i.e. less likely to extend after a bad year, more after a good one
             int moddedPerf = p.getNetPerf() + getRunningPerf();
             if (moddedPerf < -10){
                 dropPlayer(p);
@@ -142,10 +142,7 @@ public class Team {
     }
 
     public boolean isFull(){
-        if (players.size() == 5){
-            return true;
-        }
-        return false;
+        return players.size() == 5;
     }
 
     /**
