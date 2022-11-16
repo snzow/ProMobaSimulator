@@ -1,8 +1,5 @@
 package world;
 
-import game.Game;
-
-import java.sql.Array;
 import java.util.*;
 
 import static java.util.Comparator.*;
@@ -17,10 +14,10 @@ public class World {
     static ArrayList<Tournament> events;
 
     public static void main(String[] args) {
-        allPlayers = new HashMap<String,Player>();
+        allPlayers = new HashMap<>();
         initializeFreeAgents();
         initializeTeams();
-        events = initializeTournaments();
+        initializeTournaments();
         Scanner kb = new Scanner(System.in);
         runFreeAgency();
         int seasonProg = 0;
@@ -55,6 +52,9 @@ public class World {
                 }
 
             }
+            else if (inp == 4){
+                break;
+            }
         }
 
     }
@@ -79,23 +79,19 @@ public class World {
                 p.updateSkill(getRandomNumber(-150,150));
             }
         }
-        for (int i = 0; i < teams.size(); i++) {
-            for (int j = 0; j < teams.get(i).getRosterSize(); j++) {
-                Player p = teams.get(i).players.get(j);
+        for (Team team : teams) {
+            for (int j = 0; j < team.getRosterSize(); j++) {
+                Player p = team.players.get(j);
                 if (p.netPerformance < -10) {
-                    teams.get(i).dropPlayer(p);
+                    team.dropPlayer(p);
                     p.netPerformance = 0;
                 }
             }
         }
-        int teamsFull = 0;
-        boolean fa = true;
-        int looped = 0;
         freeAgents.sort(Comparator.comparing(Player::getSkill,reverseOrder()));
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         ArrayList<Team> teamsToFA = (ArrayList<Team>) teams.clone();
 
-        int teamsToProcess = teamsToFA.size();
         while (teamsToFA.size() > 0) {
             for (int i = 0; i < teamsToFA.size(); i++) {
                 Team t = teamsToFA.get(i);
@@ -110,7 +106,6 @@ public class World {
                     }
                     t.signPlayer(freeAgents.remove(cur));
                 }
-            looped++;
             }
         }
         for(Team t : teams){
@@ -135,8 +130,8 @@ public class World {
         }
     }
     public static void initializeFreeAgents(){
-        freeAgents = new ArrayList<Player>();
-        playerList = new ArrayList<Player>();
+        freeAgents = new ArrayList<>();
+        playerList = new ArrayList<>();
         //1-5
         Player tmp = new Player("AodhaN",1500,22);
         allPlayers.put("Aodhan",tmp);
@@ -333,20 +328,19 @@ public class World {
         System.out.println(teams.size() + " teams initialized");
     }
 
-    public static ArrayList<Tournament> initializeTournaments(){
-        ArrayList<Tournament> tmp = new ArrayList<>();
-        tmp.add(new Tournament("Season Open Invitational",500000, 1000,true));
-        tmp.add(new Tournament("Season Open Minor",100000,500,false));
-        tmp.add(new Tournament("Regional Tournament",150000,800,false));
-        tmp.add(new Tournament("Mid-Season Invitational",500000, 1000,true));
-        tmp.add(new Tournament("Regional Tournament",150000,800,false));
-        tmp.add(new Tournament("Mid-Season Minor",100000,500,false));
-        tmp.add(new Tournament("Regional Tournament",150000,800,false));
-        tmp.add(new Tournament("Regional Tournament",150000,800,false));
-        tmp.add(new Tournament("Season End Minor",100000,500,false));
-        tmp.add(new Tournament("The International",1000000, 2000,true));
+    public static void initializeTournaments(){
+        events = new ArrayList<>();
+        createTournament("Season Open Invitational",500000, 1000,true);
+        createTournament("Season Open Minor",100000,500,false);
+        createTournament("Regional Tournament",150000,800,false);
+        createTournament("Mid-Season Invitational",500000, 1000,true);
+        createTournament("Regional Tournament",150000,800,false);
+        createTournament("Mid-Season Minor",100000,500,false);
+        createTournament("Regional Tournament",150000,800,false);
+        createTournament("Regional Tournament",150000,800,false);
+        createTournament("Season End Minor",100000,500,false);
+        createTournament("The International",1000000, 2000,true);
 
-        return tmp;
     }
     public static int getRandomNumber(int min, int max){
         return (int)Math.floor(Math.random()*(max-min+1)+min);
@@ -362,5 +356,9 @@ public class World {
     public static void createTeam(String n, String t){
         Team tmp = new Team(n,t);
         teams.add(tmp);
+    }
+
+    public static void createTournament(String s, int pr, int po, boolean maj){
+        events.add(new Tournament(s,pr,po,maj));
     }
 }

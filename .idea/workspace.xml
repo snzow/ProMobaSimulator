@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="tons more updates">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/Tournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Tournament.java" afterDir="false" />
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="lots more, also the free agent loop is finally fixed">
       <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +69,7 @@
       <workItem from="1668371315008" duration="351000" />
       <workItem from="1668417012537" duration="13674000" />
       <workItem from="1668456555012" duration="12932000" />
-      <workItem from="1668562987178" duration="16048000" />
+      <workItem from="1668562987178" duration="16469000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
@@ -90,7 +85,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668469812610</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="lots more, also the free agent loop is finally fixed">
+      <created>1668580832688</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1668580832688</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -110,6 +112,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="insane" />
     <MESSAGE value="tons more updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="tons more updates" />
+    <MESSAGE value="lots more, also the free agent loop is finally fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="lots more, also the free agent loop is finally fixed" />
   </component>
 </project>
