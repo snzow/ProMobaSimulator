@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="cleaned up some code">
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="starting to wokr on tournament history">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Hero.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Tournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Tournament.java" afterDir="false" />
@@ -75,7 +73,8 @@
       <workItem from="1668371315008" duration="351000" />
       <workItem from="1668417012537" duration="13674000" />
       <workItem from="1668456555012" duration="12932000" />
-      <workItem from="1668562987178" duration="18099000" />
+      <workItem from="1668562987178" duration="18238000" />
+      <workItem from="1668665980177" duration="1711000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
@@ -105,7 +104,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668581485267</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="starting to wokr on tournament history">
+      <created>1668582975582</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1668582975582</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -127,6 +133,7 @@
     <MESSAGE value="tons more updates" />
     <MESSAGE value="lots more, also the free agent loop is finally fixed" />
     <MESSAGE value="cleaned up some code" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned up some code" />
+    <MESSAGE value="starting to wokr on tournament history" />
+    <option name="LAST_COMMIT_MESSAGE" value="starting to wokr on tournament history" />
   </component>
 </project>

@@ -154,6 +154,9 @@ public class Player {
 
         System.out.println("------------");
     }
+    public String getName(){
+        return name;
+    }
     public String toString(){
         if (team.toString().equals("Free Agent")){
             return name;

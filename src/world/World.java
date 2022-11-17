@@ -11,6 +11,7 @@ public class World {
     static ArrayList<Player> freeAgents;
     static ArrayList<Team> teams;
 
+    static Map<String, Tournament> tournamentMap;
     static ArrayList<Tournament> events;
 
     public static void main(String[] args) {
@@ -27,6 +28,7 @@ public class World {
             System.out.println("1. Play Next Event");
             System.out.println("2. Show Standings");
             System.out.println("3. Show Player History");
+            System.out.println("5. Show Tournament History");
             System.out.println("----------");
             int inp = kb.nextInt();
             if (inp == 1) {
@@ -53,7 +55,19 @@ public class World {
 
             }
             else if (inp == 4){
-                break;
+
+            }
+            else if (inp == 5){
+                System.out.println("enter tournament to show history of:");
+                kb.nextLine();
+                String tp = kb.nextLine();
+                Tournament tmp = tournamentMap.get(tp);
+                if (tmp != null){
+                    tmp.printTournamentHistory();
+                }
+                else{
+                    System.out.println("Tournament Not Found");
+                }
             }
         }
 
@@ -64,10 +78,12 @@ public class World {
      */
     public static void runFreeAgency(){
         showStandingsAwards();
+        teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for (Player p : playerList){
             p.yearEndStats();
         }
         for(Team t : teams){
+            t.setWorldRanking(teams.indexOf(t));
             t.tickYear();
         }
         for (Player p : playerList){
@@ -155,9 +171,11 @@ public class World {
         allPlayers.put("charfra",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
-        createPlayer("SGod");
+        tmp = new Player("Mysterio",1500,22);
+        playerList.add(tmp);
+        freeAgents.add(tmp);
         //6-10
-       createPlayer("Mysterio101");
+        createPlayer("SGod");
        createPlayer("Iansanity");
        createPlayer("xyz");
        createPlayer("Trix");
@@ -336,6 +354,7 @@ public class World {
 
     public static void initializeTournaments(){
         events = new ArrayList<>();
+        tournamentMap = new HashMap<>();
         createTournament("Season Open Invitational",500000, 1000,true);
         createTournament("Season Open Minor",100000,500,false);
         createTournament("Regional Tournament",150000,800,false);
@@ -366,6 +385,8 @@ public class World {
     }
 
     public static void createTournament(String s, int pr, int po, boolean maj){
-        events.add(new Tournament(s,pr,po,maj));
+        Tournament tmp = new Tournament(s,pr,po,maj);
+        events.add(tmp);
+        tournamentMap.put(s,tmp);
     }
 }

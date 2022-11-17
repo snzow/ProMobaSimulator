@@ -1,10 +1,13 @@
 package world;
 
+import java.sql.Array;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class Team {
 
     ArrayList<Player> players;
+    ArrayList<TeamSeasonRecord> history;
     Organization sponsor;
     String name;
 
@@ -17,12 +20,16 @@ public class Team {
     int tiWonY;
     int tourneysWon;
     int tourneysWonY;
-    ArrayList<Integer> resultsY;
 
     double pointsY;
     double pointsL;
 
     int runningPerf;
+    int wins;
+    int winsY;
+    int losses;
+    int lossesY;
+    int worldRanking;
 
     public Team(String n,String t){
         name = n;
@@ -31,10 +38,15 @@ public class Team {
         prizeMoneyY = 0;
         majorsWon = 0;
         players = new ArrayList<>();
-        resultsY = new ArrayList<>();
+        history = new ArrayList<>();
         pointsY = 0;
         pointsL = 0;
         runningPerf = 0;
+        wins = 0;
+        winsY = 0;
+        losses = 0;
+        lossesY = 0;
+        worldRanking = 0;
     }
 
     public void signPlayer(Player p){
@@ -115,6 +127,13 @@ public class Team {
         System.out.println("--------------");
 
     }
+    public int getWorldRanking(){
+        return worldRanking;
+    }
+
+    public void setWorldRanking(int x){
+        worldRanking = x;
+    }
 
     public double getPoints(){
         return pointsY + pointsL;
@@ -125,12 +144,17 @@ public class Team {
     }
 
     public void tickYear(){
+        TeamSeasonRecord tmp = new TeamSeasonRecord(winsY,lossesY,prizeMoneyY);
+        history.add(tmp);
         pointsL = pointsY/2;
         pointsY = 0;
         payPlayers();
         tourneysWonY = 0;
         majorsWonY = 0;
         tiWonY = 0;
+        winsY = 0;
+        lossesY = 0;
+        prizeMoneyY = 0;
     }
 
     public String getTag(){
@@ -138,7 +162,7 @@ public class Team {
     }
 
     public ArrayList<Player> getRoster(){
-        return players;
+        return (ArrayList<Player>) players.clone();
     }
 
     public boolean isFull(){
@@ -212,5 +236,46 @@ public class Team {
         return z + name + z;
     }
 
+    public void printHistory(){
+        System.out.println("---" + name + "---");
+        for (TeamSeasonRecord r : history){
+            System.out.println(r.toString());
+            r.printRoster();
+        }
+        System.out.println("-----------");
+    }
+
+    private class TeamSeasonRecord{
+        int wins;
+        int losses;
+        int tourneyWins;
+        int majorWins;
+        int tiWins;
+        double prizeWinnings;
+        ArrayList<Player> roster;
+        int worldRanking;
+
+        public TeamSeasonRecord(int w, int l, double pw){
+            wins = w;
+            losses = l;
+            tourneyWins = getTourneysWon(0);
+            majorWins = getMajorsWon(0);
+            tiWins = getTiWon(0);
+            prizeWinnings = pw;
+            roster = getRoster();
+            worldRanking = getWorldRanking();
+        }
+
+        public void printRoster(){
+            for (Player p : roster){
+                System.out.println(p.getName());
+            }
+        }
+
+        public String toString(){
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            return tourneyWins + "(" + majorWins + ") | " + wins + "-" + losses + " | " + formatter.format(prizeWinnings);
+        }
+    }
 
 }

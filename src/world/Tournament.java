@@ -134,7 +134,7 @@ public class Tournament {
         System.out.println("History: ");
         int year = 1;
         for(TournamentResult t : pastResults){
-            System.out.println(t.toString());
+            System.out.println("year " + year + ": " + t.toString());
         }
     }
 
