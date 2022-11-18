@@ -9,82 +9,86 @@ import java.util.ArrayList;
 public class Game {
 
     static ArrayList<Hero> heroes;
-    Team teamOne;
-    Team teamTwo;
+    Team radiant;
+    Team dire;
 
     public Game(Team to, Team tt){
-        teamOne = to;
-        teamTwo = tt;
+        radiant = to;
+        dire = tt;
     }
 
     public Team playSeries(int bo){
-        int t1w = 0;
-        int t2w = 0;
-        while(t1w < bo && t2w < bo){
-            if(playGame().equals(teamOne)){
-                t1w++;
+        int radiantWins = 0;
+        int direWins = 0;
+        while(radiantWins < bo && direWins < bo){
+            if(playGame().equals(radiant)){
+                radiantWins++;
             }
             else {
-                t2w++;
+                direWins++;
             }
         }
-        System.out.println(teamOne + " " + t2w + " - " + t1w + " " + teamTwo);
-        if(t1w > t2w){
-            return teamTwo;
+        System.out.println(radiant + " " + radiantWins + " - " + direWins + " " + dire);
+        if(radiantWins > direWins){
+            return radiant;
         }
         else{
-            return teamOne;
+            return dire;
         }
 
     }
     public Team playGame(){
-        ArrayList<InGamePlayer> radiant = new ArrayList<>();
-        ArrayList<InGamePlayer> dire = new ArrayList<>();
-        ArrayList<Player> tmpA = teamOne.getRoster();
-        ArrayList<Player> tmpB = teamTwo.getRoster();
+        ArrayList<InGamePlayer> radiantInGame = new ArrayList<>();
+        ArrayList<InGamePlayer> direInGame = new ArrayList<>();
+        ArrayList<Player> tmpA = radiant.getRoster();
+        ArrayList<Player> tmpB = dire.getRoster();
         for(int i = 0; i < 5; i++){
             InGamePlayer rad = new InGamePlayer(tmpA.get(i));
             InGamePlayer dir = new InGamePlayer(tmpB.get(i));
-            radiant.add(rad);
-            dire.add(dir);
+            radiantInGame.add(rad);
+            direInGame.add(dir);
         }
-        int direKills = 0;
+        int direInGameKills = 0;
         int radiantKills = 0;
         int totalKills = 0;
         int radP = World.getRandomNumber(0,4);
         int dirP = World.getRandomNumber(0,4);
         while(true){
             if (totalKills > 50){
-                if (direKills > radiantKills){
-                    teamOne.updateRunningPerf(-1);
-                    teamTwo.updateRunningPerf(1);
-                    updatePerf(radiant,dire);
-                    return teamOne;
+                if (direInGameKills > radiantKills){
+                    radiant.updateRunningPerf(-1);
+                    dire.updateRunningPerf(1);
+                    updatePerf(radiantInGame,direInGame);
+                    radiant.incrementLosses();
+                    dire.incrementWins();
+                    return dire;
                 }
                 else{
-                    teamTwo.updateRunningPerf(-1);
-                    teamOne.updateRunningPerf(1);
-                    updatePerf(radiant,dire);
-                    return teamTwo;
+                    dire.updateRunningPerf(-1);
+                    radiant.updateRunningPerf(1);
+                    dire.incrementLosses();
+                    radiant.incrementWins();
+                    updatePerf(radiantInGame,direInGame);
+                    return radiant;
                 }
             }
             else{
-                double total = radiant.get(radP).getSkill() + dire.get(dirP).getSkill();
+                double total = radiantInGame.get(radP).getSkill() + direInGame.get(dirP).getSkill();
                 int seed = World.getRandomNumber(0,(int)total);
                 double mid = total / 2;
                 if (seed >= mid + 100){
-                    dire.get(dirP).kill();
-                    dire.get(dirP).skill += 200;
-                    radiant.get(radP).skill -= 200;
-                    radiant.get(radP).die();
-                    direKills++;
+                    direInGame.get(dirP).kill();
+                    direInGame.get(dirP).skill += 200;
+                    radiantInGame.get(radP).skill -= 200;
+                    radiantInGame.get(radP).die();
+                    direInGameKills++;
                     totalKills++;
                 }
                 else if (seed <= mid - 100){
-                    dire.get(dirP).die();
-                    radiant.get(radP).skill += 200;
-                    dire.get(dirP).skill -= 200;
-                    radiant.get(radP).kill();
+                    direInGame.get(dirP).die();
+                    radiantInGame.get(radP).skill += 200;
+                    direInGame.get(dirP).skill -= 200;
+                    radiantInGame.get(radP).kill();
                     radiantKills++;
                     totalKills++;
                 }

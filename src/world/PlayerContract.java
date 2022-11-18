@@ -26,7 +26,7 @@ public class PlayerContract {
     }
 
     public void extendContract(double s, int y){
-        salary += team.balance/10;
+        salary += team.balance/5;
         salary *= s;
         yearsRemaining += y;
     }

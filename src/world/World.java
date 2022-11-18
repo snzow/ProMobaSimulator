@@ -1,21 +1,24 @@
 package world;
 
+import java.text.NumberFormat;
 import java.util.*;
 
 import static java.util.Comparator.*;
 
 public class World {
 
-    static Map<String,Player> allPlayers;
+    static Map<String,Player> playerMap;
     static ArrayList<Player> playerList;
     static ArrayList<Player> freeAgents;
     static ArrayList<Team> teams;
+
+    static Map<String, Team> teamMap;
 
     static Map<String, Tournament> tournamentMap;
     static ArrayList<Tournament> events;
 
     public static void main(String[] args) {
-        allPlayers = new HashMap<>();
+        playerMap = new HashMap<>();
         initializeFreeAgents();
         initializeTeams();
         initializeTournaments();
@@ -28,6 +31,7 @@ public class World {
             System.out.println("1. Play Next Event");
             System.out.println("2. Show Standings");
             System.out.println("3. Show Player History");
+            System.out.println("4. Show Team History");
             System.out.println("5. Show Tournament History");
             System.out.println("----------");
             int inp = kb.nextInt();
@@ -40,12 +44,12 @@ public class World {
                 }
             }
             else if (inp == 2){
-                showStandingsAwards();
+                showStandingsAwards(false);
             }
             else if (inp == 3){
                 System.out.println("enter player to show history of:");
                 String tp = kb.next();
-                Player tmp = allPlayers.get(tp);
+                Player tmp = playerMap.get(tp);
                 if (tmp != null){
                     tmp.printHistory();
                 }
@@ -55,7 +59,16 @@ public class World {
 
             }
             else if (inp == 4){
-
+                System.out.println("enter team to show history of:");
+                kb.nextLine();
+                String tp = kb.nextLine();
+                Team tmp = teamMap.get(tp);
+                if (tmp != null){
+                    tmp.printHistory();
+                }
+                else{
+                    System.out.println("Tournament Not Found");
+                }
             }
             else if (inp == 5){
                 System.out.println("enter tournament to show history of:");
@@ -77,13 +90,13 @@ public class World {
      * runs the free agency process, meant to be done at the end of the year
      */
     public static void runFreeAgency(){
-        showStandingsAwards();
+        showStandingsAwards(true);
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for (Player p : playerList){
             p.yearEndStats();
         }
         for(Team t : teams){
-            t.setWorldRanking(teams.indexOf(t));
+            t.setWorldRanking(teams.indexOf(t) + 1);
             t.tickYear();
         }
         for (Player p : playerList){
@@ -136,19 +149,37 @@ public class World {
     /**
      * shows the top 10 ranked players by netperformance and top 10 teams by points
      */
-    public static void showStandingsAwards(){
-        System.out.println("Year end awards");
-        System.out.println("Player Rankings");
+    public static void showStandingsAwards(boolean yearEnd){
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
         playerList.sort(Comparator.comparing(Player::getNetPerf,reverseOrder()));
-        for(int i = 0; i < 10; i++){
-            Player p = playerList.get(i);
-            System.out.println( (i + 1) + ". " + p);
+        int playersToList = 25;
+        if(yearEnd){
+            playersToList = 10;
+            System.out.println("Year end awards");
         }
-        System.out.println("Team Rankings | Tournaments Won (Majors won)");
-        teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
-        for(int i = 0; i < 10; i++){
-            Team t = teams.get(i);
-            System.out.println( (i + 1) + ". " + t + " | " + t.tourneysWonY + "(" + t.majorsWonY + ")");
+        System.out.println("Player Rankings");
+        for(int i = 0; i < playersToList; i++){
+            Player p = playerList.get(i);System.out.println( (i + 1) + ". " + p);
+            }
+
+        System.out.println("Team Rankings | Tournaments Won (Majors won) | Team Balance");
+        if(yearEnd){
+            teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
+        }
+        else{
+            teams.sort(Comparator.comparing(Team::getBalance,reverseOrder()));
+        }
+        if(yearEnd){
+            for(int i = 0; i < 10; i++){
+                Team t = teams.get(i);
+                System.out.println( (i + 1) + ". " + t + " | " + t.getTourneysWon(0) + "(" + t.getMajorsWon(0) + ") | " + formatter.format(t.getBalance()));
+            }
+        }
+        else{
+            for(int i = 0; i < teams.size(); i++){
+                Team t = teams.get(i);
+                System.out.println( (i + 1) + ". " + t + " | " + t.getTourneysWon(1) + "(" + t.getMajorsWon(1) + ") | " + formatter.format(t.getBalance()));
+            }
         }
     }
     public static void initializeFreeAgents(){
@@ -156,19 +187,19 @@ public class World {
         playerList = new ArrayList<>();
         //1-5
         Player tmp = new Player("AodhaN",1500,22);
-        allPlayers.put("Aodhan",tmp);
+        playerMap.put("Aodhan",tmp);
         freeAgents.add(tmp);
         playerList.add(tmp);
         tmp =  new Player("Fiyah",1500,22);
-        allPlayers.put("Fiyah",tmp);
+        playerMap.put("Fiyah",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
         tmp = new Player("Malco85",1500,19);
-        allPlayers.put("Malco85",tmp);
+        playerMap.put("Malco85",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
         tmp = new Player("charfra",1500,22);
-        allPlayers.put("charfra",tmp);
+        playerMap.put("charfra",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
         tmp = new Player("Mysterio",1500,22);
@@ -323,6 +354,7 @@ public class World {
 
     public static void initializeTeams(){
         teams = new ArrayList<>();
+        teamMap = new HashMap<>();
         //1-4
         createTeam("Cloud9","C9");
         createTeam("Team Liquid","Liquid");
@@ -355,16 +387,16 @@ public class World {
     public static void initializeTournaments(){
         events = new ArrayList<>();
         tournamentMap = new HashMap<>();
-        createTournament("Season Open Invitational",500000, 1000,true);
-        createTournament("Season Open Minor",100000,500,false);
-        createTournament("Regional Tournament",150000,800,false);
-        createTournament("Mid-Season Invitational",500000, 1000,true);
-        createTournament("Regional Tournament",150000,800,false);
-        createTournament("Mid-Season Minor",100000,500,false);
-        createTournament("Regional Tournament",150000,800,false);
-        createTournament("Regional Tournament",150000,800,false);
-        createTournament("Season End Minor",100000,500,false);
-        createTournament("The International",1000000, 2000,true);
+        createTournament("Season Open Invitational",250000, 1000,true);
+        createTournament("Season Open Minor",50000,500,false);
+        createTournament("Regional Tournament",75000,800,false);
+        createTournament("Mid-Season Invitational",250000, 1000,true);
+        createTournament("Regional Tournament",75000,800,false);
+        createTournament("Mid-Season Minor",50000,500,false);
+        createTournament("Regional Tournament",75000,800,false);
+        createTournament("Regional Tournament",75000,800,false);
+        createTournament("Season End Minor",50000,500,false);
+        createTournament("The International",2000000, 2000,true);
 
     }
 
@@ -374,7 +406,7 @@ public class World {
 
     public static void createPlayer(String s){
         Player tmp = new Player(s);
-        allPlayers.put(s,tmp);
+        playerMap.put(s,tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
     }
@@ -382,6 +414,7 @@ public class World {
     public static void createTeam(String n, String t){
         Team tmp = new Team(n,t);
         teams.add(tmp);
+        teamMap.put(n,tmp);
     }
 
     public static void createTournament(String s, int pr, int po, boolean maj){

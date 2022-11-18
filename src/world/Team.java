@@ -52,7 +52,7 @@ public class Team {
     public void signPlayer(Player p){
         System.out.println(name + " have signed " + p);
         players.add(p);
-        p.signContract(this, (int) (balance/10),2);
+        p.signContract(this, (int) (balance/8),2);
 
     }
     public void winTourney(boolean maj,boolean ti){
@@ -157,8 +157,21 @@ public class Team {
         prizeMoneyY = 0;
     }
 
+    public void incrementWins(){
+        wins++;
+        winsY++;
+    }
+
+    public void incrementLosses(){
+        losses++;
+        lossesY++;
+    }
+
     public String getTag(){
         return tag;
+    }
+    public double getBalance(){
+        return balance;
     }
 
     public ArrayList<Player> getRoster(){
@@ -216,7 +229,7 @@ public class Team {
         for (int i = 0; i < 5; i++){
             Player p = players.get(i);
             if (p.getYearsWithTeam() == 0){
-                System.out.println(players.get(i) + " (new)");
+                System.out.println(players.get(i) + "(new)");
             }
             else{
                 System.out.println(players.get(i) + " " + p.getYearsWithTeam() + " year(s) with team");
@@ -237,10 +250,16 @@ public class Team {
     }
 
     public void printHistory(){
+        int year = 0;
         System.out.println("---" + name + "---");
         for (TeamSeasonRecord r : history){
-            System.out.println(r.toString());
-            r.printRoster();
+            if(year != 0){
+                System.out.println("Year " + year + " | " + r.toString());
+                System.out.println("-----------");
+                r.printRoster();
+                System.out.println("-----------");
+            }
+            year++;
         }
         System.out.println("-----------");
     }
