@@ -135,6 +135,7 @@ public class Tournament {
         int year = 1;
         for(TournamentResult t : pastResults){
             System.out.println("year " + year + ": " + t.toString());
+            year++;
         }
     }
 

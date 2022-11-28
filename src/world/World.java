@@ -17,13 +17,15 @@ public class World {
     static Map<String, Tournament> tournamentMap;
     static ArrayList<Tournament> events;
 
+    static Team FREE_AGENT = new Team("Free Agent", "FA");
+
     public static void main(String[] args) {
         playerMap = new HashMap<>();
         initializeFreeAgents();
         initializeTeams();
         initializeTournaments();
         Scanner kb = new Scanner(System.in);
-        runFreeAgency();
+        runFreeAgency(true);
         int seasonProg = 0;
         while(true) {
             System.out.println("----------");
@@ -40,7 +42,7 @@ public class World {
                 seasonProg++;
                 if (seasonProg == events.size()){
                     seasonProg = 0;
-                    runFreeAgency();
+                    runFreeAgency(false);
                 }
             }
             else if (inp == 2){
@@ -89,7 +91,7 @@ public class World {
     /**
      * runs the free agency process, meant to be done at the end of the year
      */
-    public static void runFreeAgency(){
+    public static void runFreeAgency(boolean firstTime){
         showStandingsAwards(true);
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for (Player p : playerList){
@@ -109,41 +111,59 @@ public class World {
             else{
                 p.updateSkill(getRandomNumber(-150,150));
             }
+            p.ageUp();
         }
         for (Team team : teams) {
             for (int j = 0; j < team.getRosterSize(); j++) {
                 Player p = team.players.get(j);
-                if (p.netPerformance < -10) {
-                    team.dropPlayer(p);
-                    p.netPerformance = 0;
-                }
             }
         }
         freeAgents.sort(Comparator.comparing(Player::getSkill,reverseOrder()));
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         @SuppressWarnings("unchecked")
         ArrayList<Team> teamsToFA = (ArrayList<Team>) teams.clone();
-
-        while (teamsToFA.size() > 0) {
-            for (int i = 0; i < teamsToFA.size(); i++) {
-                Team t = teamsToFA.get(i);
-                if(t.isFull()){
+        System.out.println("---Top Free Agents---");
+        for(int i = 0; i < 5; i++){
+            System.out.println((i+1)+ ". " + freeAgents.get(i));
+        }
+        System.out.println("----------");
+        if(!firstTime) {
+            while (teamsToFA.size() > 0) {
+                Team t = teamsToFA.get(0);
+                if (t.isFull()) {
                     teamsToFA.remove(t);
-                    i--;
-                }
-                else {
+                } else {
                     int cur = 0;
                     while (freeAgents.get(cur).getPrevTeam().equals(t)) {
                         cur++;
                     }
                     t.signPlayer(freeAgents.remove(cur));
                 }
+                teamsToFA.sort(Comparator.comparing(Team::getContractOffer, reverseOrder()));
+            }
+        }
+        else{
+            while(teamsToFA.size() > 0){
+                for(int i = 0; i < teamsToFA.size(); i++){
+                    Team t = teamsToFA.get(i);
+                    if(t.isFull()){
+                        teamsToFA.remove(t);
+                        i--;
+                    }
+                    else{
+                        t.signPlayer(freeAgents.remove(0));
+                    }
+                }
             }
         }
         for(Team t : teams){
+            t.printFA();
+            t.clearFA();
             t.printRoster();
         }
-        System.out.println("free agency complete");
+        for(Player p : freeAgents){
+            p.setPrevTeam(FREE_AGENT);
+        }
     }
 
     /**
@@ -172,13 +192,15 @@ public class World {
         if(yearEnd){
             for(int i = 0; i < 10; i++){
                 Team t = teams.get(i);
-                System.out.println( (i + 1) + ". " + t + " | " + t.getTourneysWon(0) + "(" + t.getMajorsWon(0) + ") | " + formatter.format(t.getBalance()));
+                System.out.println( (i + 1) + ". " + t + " | " + t.getTourneysWon(0) + "(" +
+                        t.getMajorsWon(0) + ") | " + formatter.format(t.getBalance()));
             }
         }
         else{
             for(int i = 0; i < teams.size(); i++){
                 Team t = teams.get(i);
-                System.out.println( (i + 1) + ". " + t + " | " + t.getTourneysWon(1) + "(" + t.getMajorsWon(1) + ") | " + formatter.format(t.getBalance()));
+                System.out.println( (i + 1) + ". " + t + " | " + t.getTourneysWon(1) +
+                        "(" + t.getMajorsWon(1) + ") | " + formatter.format(t.getBalance()));
             }
         }
     }

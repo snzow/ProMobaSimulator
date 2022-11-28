@@ -12,6 +12,8 @@ public class Team {
     String name;
 
     String tag;
+
+    FreeAgencyInstance freeAgency;
     double balance;
     double prizeMoneyY;
     int majorsWon;
@@ -47,13 +49,19 @@ public class Team {
         losses = 0;
         lossesY = 0;
         worldRanking = 0;
+        freeAgency = new FreeAgencyInstance();
     }
 
     public void signPlayer(Player p){
-        System.out.println(name + " have signed " + p);
+        addSigning(p);
+        p.yearsWithTeam = 0;
         players.add(p);
-        p.signContract(this, (int) (balance/8),2);
+        p.signContract(this, (int) (balance/7),1);
 
+    }
+
+    public double getContractOffer(){
+        return balance/7;
     }
     public void winTourney(boolean maj,boolean ti){
         tourneysWon++;
@@ -70,7 +78,7 @@ public class Team {
 
     public Player dropPlayer(Player p){
         p.cut();
-        System.out.println(p + " has been dropped by " + name);
+        addDropped(p);
         return p;
     }
 
@@ -92,40 +100,51 @@ public class Team {
     }
 
     public void payPlayers(){
-        System.out.println("--------------");
-        System.out.println(name + " transactions");
-        System.out.println("--------------");
-        for (int i = 0; i < players.size(); i ++){
+        boolean broke = false;
+        for (int i = 0; i < players.size(); i++){
             Player p = players.get(i);
             p.payPlayer(p.getSalary());
             balance -= p.getSalary();
-            //makes teams make more accurate judgements on extending players
-            //i.e. less likely to extend after a bad year, more after a good one
-            int moddedPerf = p.getNetPerf() + getRunningPerf();
-            if (moddedPerf < -10){
-                dropPlayer(p);
+        }
+        if(getBalance() < 0){
+            while(players.size() > 0){
+                dropPlayer(players.get(0));
             }
-            else{
-                if(p.getContractYearsRemaining() == 0){
-                    if (moddedPerf > 10){
-                        p.extendContract(1.5 ,3);
-                    }
-                    else if(moddedPerf > 5){
-                        p.extendContract(1.25,2);
-                    }
-                    else if(moddedPerf > 0){
-                        p.extendContract(1.1,1);
-                    }
-                    else{
-                        dropPlayer(p);
+            broke = true;
+        }
+        else{
+            for (int i = 0; i < players.size(); i ++){
+                Player p = players.get(i);
+                //makes teams make more accurate judgements on extending players
+                //i.e. less likely to extend after a bad year, more after a good one
+                int moddedPerf = p.getNetPerf() + getRunningPerf();
+                if (moddedPerf < -10){
+                    dropPlayer(p);
+
+                }
+                else{
+                    if(p.getContractYearsRemaining() == 0){
+                        if (moddedPerf > 10){
+                            p.extendContract(1.5 ,3);
+                        }
+                        else if(moddedPerf > 5){
+                            p.extendContract(1.25,2);
+                        }
+                        else if(moddedPerf > 0){
+                            p.extendContract(1.1,1);
+                        }
+                        else{
+                            dropPlayer(p);
+                        }
                     }
                 }
 
             }
         }
+        if(broke == true){
+            balance = 50000; //50,000
+        }
         runningPerf = 0;
-        System.out.println("--------------");
-
     }
     public int getWorldRanking(){
         return worldRanking;
@@ -223,20 +242,32 @@ public class Team {
         }
     }
     public void printRoster(){
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
         System.out.println("-------------");
-        System.out.println(name);
-        System.out.println("-------------");
+        String correctYear = "year";
         for (int i = 0; i < 5; i++){
             Player p = players.get(i);
-            if (p.getYearsWithTeam() == 0){
-                System.out.println(players.get(i) + "(new)");
+            if (p.getYearsWithTeam() == 1){
+                correctYear = "year";
             }
             else{
-                System.out.println(players.get(i) + " " + p.getYearsWithTeam() + " year(s) with team");
+                correctYear = "years";
+            }
+            if (p.getYearsWithTeam() == 0){
+                System.out.println(players.get(i) + " - " + formatter.format(p.getSalary()) );
+            }
+            else{
+                System.out.println(players.get(i) + " | " + p.getYearsWithTeam() + " " + correctYear + " with team");
             }
 
         }
     }
+    public void printRoster(String s){
+        System.out.println("-------------");
+        System.out.println(name);
+        printRoster();
+    }
+
 
     public int getRosterSize(){
         return players.size();
@@ -262,6 +293,28 @@ public class Team {
             year++;
         }
         System.out.println("-----------");
+    }
+
+    public FreeAgencyInstance getFA(){
+        return freeAgency;
+    }
+
+    public void clearFA(){
+        freeAgency.clearInstance();
+    }
+
+    public void printFA(){
+        freeAgency.printTransactions();
+    }
+
+    public void addExtension(Player p){
+        freeAgency.addExtension(p);
+    }
+    public void addDropped(Player p){
+        freeAgency.addDropped(p);
+    }
+    public void addSigning(Player p){
+        freeAgency.addPickedUp(p);
     }
 
     private class TeamSeasonRecord{
@@ -293,8 +346,65 @@ public class Team {
 
         public String toString(){
             NumberFormat formatter = NumberFormat.getCurrencyInstance();
-            return tourneyWins + "(" + majorWins + ") | " + wins + "-" + losses + " | " + formatter.format(prizeWinnings);
+            return tourneyWins + "(" + majorWins + ") | " + wins + "-" +
+                    losses + " | " + formatter.format(prizeWinnings);
         }
     }
+    private class FreeAgencyInstance {
+        ArrayList<Player> dropped;
+        ArrayList<Player> pickedUp;
 
+        ArrayList<Player> extensions;
+
+        public FreeAgencyInstance() {
+            dropped = new ArrayList<>();
+            pickedUp = new ArrayList<>();
+            extensions = new ArrayList<>();
+        }
+
+        private void addDropped(Player p) {
+            dropped.add(p);
+        }
+
+        private void addPickedUp(Player p) {
+            pickedUp.add(p);
+        }
+
+        private void addExtension(Player p) {
+            extensions.add(p);
+        }
+
+        private void clearInstance() {
+            dropped.clear();
+            pickedUp.clear();
+            extensions.clear();
+        }
+
+        private void printTransactions() {
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            System.out.println("--------------");
+            System.out.println(name + " " + formatter.format(getBalance()));
+            System.out.println("--------------");
+            if(dropped.size() > 0){
+                System.out.println("--- Out ---");
+            }
+            for (Player p : dropped) {
+                System.out.println(p.getName() + " -> " + p.getTeam());
+            }
+            if(pickedUp.size() > 0){
+                System.out.println("--- In ---");
+            }
+            for (Player p : pickedUp) {
+                System.out.println(p.getName() + " <- " + p.getPrevTeam());
+            }
+            if(extensions.size() > 0){
+                System.out.println("--- Extensions ---");
+            }
+            for (Player p : extensions) {
+                System.out.println(p.getName() + " - " +
+                        formatter.format(p.getSalary()) + "/" + p.getContractYearsRemaining());
+            }
+
+        }
+    }
 }
