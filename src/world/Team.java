@@ -49,6 +49,8 @@ public class Team {
         losses = 0;
         lossesY = 0;
         worldRanking = 0;
+        tiWon = 0;
+        tiWonY = 0;
         freeAgency = new FreeAgencyInstance();
     }
 
@@ -56,7 +58,7 @@ public class Team {
         addSigning(p);
         p.yearsWithTeam = 0;
         players.add(p);
-        p.signContract(this, (int) (balance/7),1);
+        p.signContract(this, Math.min((int) (balance/9),350000),1);
 
     }
 
@@ -119,7 +121,10 @@ public class Team {
                 //i.e. less likely to extend after a bad year, more after a good one
                 int moddedPerf = p.getNetPerf() + getRunningPerf();
                 if (moddedPerf < -10){
-                    dropPlayer(p);
+                    if(tiWonY == 0){
+                        dropPlayer(p);
+                    }
+
 
                 }
                 else{
@@ -133,8 +138,11 @@ public class Team {
                         else if(moddedPerf > 0){
                             p.extendContract(1.1,1);
                         }
-                        else{
+                        else if (tiWonY == 0){
                             dropPlayer(p);
+                        }
+                        else{
+                            p.extendContract(1,1);
                         }
                     }
                 }

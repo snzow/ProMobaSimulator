@@ -29,14 +29,16 @@ public class Tournament {
         pastResults.add(thisTourney);
         boolean ti = false;
         if(!major){
+            int numTeams = 16;
             teams = new ArrayList<Team>();
             if (pointsPool < 700){
                 t.sort(Comparator.comparing(Team::getPoints));
+                numTeams = 8;
             }
             else{
                 Collections.shuffle(t);
             }
-            for(int i = 0; i < 8; i++){
+            for(int i = 0; i < numTeams; i++){
                 teams.add(t.get(i));
             }
         }
@@ -79,8 +81,8 @@ public class Tournament {
             ArrayList<Team> roundNow = rounds.get(i);
             int sizeForRound = roundNow.size() / 2;
             for (Team b : roundNow){
-                b.updatePoints(pointsPool);
-                b.receivePrizeMoney(prizePool/10);
+                b.updatePoints(pointsPool/roundNow.size());
+                b.receivePrizeMoney(prizePool/roundNow.size());
             }
             for (int j = 0; j < sizeForRound; j++){
                 int q = roundNow.size() - 1 - j;
@@ -102,6 +104,8 @@ public class Tournament {
                     System.out.println(win + " has won " + name);
                     System.out.println("------------");
                     win.winTourney(major,ti);
+                    win.updatePoints(pointsPool);
+                    win.receivePrizeMoney(prizePool);
                     return;
                 }
                 else if(i >= roundsToPlay -3){
