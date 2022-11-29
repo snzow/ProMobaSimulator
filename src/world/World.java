@@ -1,12 +1,14 @@
 package world;
 
+import game.Hero;
+
 import java.text.NumberFormat;
 import java.util.*;
 
 import static java.util.Comparator.*;
 
 public class World {
-
+    static int gameVersion;
     static Map<String,Player> playerMap;
     static ArrayList<Player> playerList;
     static ArrayList<Player> freeAgents;
@@ -17,16 +19,23 @@ public class World {
     static Map<String, Tournament> tournamentMap;
     static ArrayList<Tournament> events;
 
+    public static ArrayList<Hero> heroList;
+
+    static Map<Hero,Double> heroMap;
+
     static Team FREE_AGENT = new Team("Free Agent", "FA");
+
 
     public static void main(String[] args) {
         playerMap = new HashMap<>();
+        initializeHeroes();
         initializeFreeAgents();
         initializeTeams();
         initializeTournaments();
         Scanner kb = new Scanner(System.in);
         runFreeAgency(true);
         int seasonProg = 0;
+        boolean patchThisYear = false;
         while(true) {
             System.out.println("----------");
             System.out.println("Menu");
@@ -37,10 +46,17 @@ public class World {
             System.out.println("5. Show Tournament History");
             System.out.println("----------");
             int inp = kb.nextInt();
+
             if (inp == 1) {
                 if (seasonProg == events.size()){
                     seasonProg = 0;
                     runFreeAgency(false);
+                    patchThisYear= false;
+                    continue;
+                }
+                if(seasonProg == events.size()/2 && !patchThisYear){
+                    patchHeroes();
+                    patchThisYear = true;
                     continue;
                 }
                 events.get(seasonProg).runTournament(teams);
@@ -208,6 +224,28 @@ public class World {
         }
     }
 
+    public static void patchHeroes(){
+
+        int heroListSize = heroList.size();
+        gameVersion++;
+        System.out.println("---Major Patch---");
+        heroList.sort(Comparator.comparing(Hero::getPicks,Comparator.reverseOrder()));
+        System.out.println("Version " + gameVersion);
+        System.out.println("---Previous Version Most Picked---");
+        for (int i = 0; i < 5; i++){
+            System.out.println((i+1) + ". " + heroList.get(i).toString());
+        }
+        heroList.sort(Comparator.comparing(Hero::getPicks));
+        System.out.println("---Previous Version Least Picked---");
+        for (int i = 0; i < 5; i++){
+            System.out.println((i+1) + ". " + heroList.get(i).toString());
+        }
+        heroList.sort(Comparator.comparing(Hero::getMetaStrength,Comparator.reverseOrder()));
+        for(Hero h : heroList){
+            h.patchHero();
+        }
+    }
+
     private static void c(String s){
         createPlayer(s);
     }
@@ -262,6 +300,51 @@ public class World {
         createTournament("Season End Minor",50000,500,false);
         createTournament("The International",1500000, 4000,true);
 
+    }
+
+    public static void initializeHeroes(){
+        gameVersion = 1;
+        heroList = new ArrayList<>();
+        heroMap = new HashMap<>();
+        //1-5
+        ch("Harbinger");
+        ch("Portal Keeper");
+        ch("Behemoth");
+        ch("Stormhunter");
+        ch("Smoke Wraith");
+        //6-10
+        ch("Gambler");
+        ch("Monarch");
+        ch("Crystal Scholar");
+        ch("Sorceress");
+        ch("Twilight Demon");
+        //11-15
+        ch("Piper");
+        ch("Blood Mage");
+        ch("Elder Knight");
+        ch("Enforcer");
+        ch("Scrivener");
+        //16-20
+        ch("Ghost Merchant");
+        ch("River Guardian");
+        ch("Warden of the Grove");
+        ch("Gatherer");
+        ch("Spirit of Calamity");
+        //21-25
+        ch("Water Spirit");
+        ch("Fire Spirit");
+        ch("Air Spirit");
+        ch("Earth Spirit");
+        ch("Forgotten Toy");
+    }
+
+    private static void ch(String name){
+        createHero(name);
+    }
+    private static void createHero(String name){
+        Hero tmp = new Hero(name);
+        heroList.add(tmp);
+        heroMap.put(tmp,1.0);
     }
 
     public static int getRandomNumber(int min, int max){

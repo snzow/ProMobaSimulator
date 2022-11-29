@@ -4,6 +4,7 @@ import game.Hero;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
 
@@ -23,6 +24,8 @@ public class Player {
     int yearsWithTeam;
     ArrayList<yearResults> history;
 
+    HashMap<Hero, Double> heroMap;
+
     public Player(String s, int sk, int a){
         name = s;
         skill = sk;
@@ -34,6 +37,11 @@ public class Player {
         team = World.FREE_AGENT;
         yearsWithTeam = 0;
         history = new ArrayList<>();
+        heroMap =  new HashMap<>(World.heroMap);
+        for(Hero h : World.heroList){
+            double seed = World.getRandomNumber(7,13)/10.0;
+            heroMap.put(h,seed);
+        }
     }
 
     public Player(String s){
@@ -45,8 +53,13 @@ public class Player {
         earnings = 0;
         team = World.FREE_AGENT;
         prevTeam = World.FREE_AGENT;
+        heroMap =  new HashMap<>(World.heroMap);
         yearsWithTeam = -1;
         history = new ArrayList<>();
+        for(Hero h : World.heroList) {
+            double seed = World.getRandomNumber(7, 13) / 10.0;
+            heroMap.put(h, seed);
+        }
     }
 
     public void signContract(Team t, int sal, int years){
@@ -166,6 +179,10 @@ public class Player {
         return (team.getTag() + "." + name);
     }
 
+    public HashMap<Hero,Double> getHeroMap(){
+        return heroMap;
+    }
+
     public void ageUp(){
         age++;
     }
@@ -199,14 +216,4 @@ public class Player {
             return (name + " | " + team + " | " + ySkill + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(salary) + " | " + z);
         }
     }
-    private class HeroAptitude{
-        Hero hero;
-        double aptitude;
-
-        public HeroAptitude(Hero h, double ap){
-            hero = h;
-            aptitude = ap;
-        }
-    }
-
 }

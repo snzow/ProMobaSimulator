@@ -6,23 +6,27 @@ import world.World;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class Game {
 
-    static ArrayList<Hero> heroes;
     Team radiant;
     Team dire;
+
+    ArrayList<Hero> pickPhase;
 
     public Game(Team to, Team tt) {
         radiant = to;
         dire = tt;
+        pickPhase = (ArrayList<Hero>) World.heroList.clone();
     }
 
     public Team playSeries(int bo) {
         int radiantWins = 0;
         int direWins = 0;
         while (radiantWins < bo && direWins < bo) {
+            pickPhase = (ArrayList<Hero>) World.heroList.clone();
             if (playGame().equals(radiant)) {
                 radiantWins++;
             } else {
@@ -43,9 +47,18 @@ public class Game {
         InGameTeam dir = new InGameTeam("Dire",dire);
         ArrayList<Player> tmpA = radiant.getRoster();
         ArrayList<Player> tmpB = dire.getRoster();
+        pickPhase.sort(Comparator.comparing(Hero::getWinrate,Comparator.reverseOrder()));
+        int seed = World.getRandomNumber(0,6);
+        banHero(pickPhase.get(seed));
+        banHero(pickPhase.get(seed));
+        seed = World.getRandomNumber(0,2);
+        banHero(pickPhase.get(seed));
+        banHero(pickPhase.get(seed));
         for (int i = 0; i < 5; i++) {
             InGamePlayer radTemp = new InGamePlayer(tmpA.get(i));
             InGamePlayer dirTemp = new InGamePlayer(tmpB.get(i));
+            radTemp.pickHero();
+            dirTemp.pickHero();
             rad.addPlayer(radTemp);
             dir.addPlayer(dirTemp);
         }
@@ -78,7 +91,7 @@ public class Game {
                 radPlayer = rad.getPlayer(radP);
                 dirPlayer = dir.getPlayer(dirP);
                 double total = radPlayer.getSkill() + dirPlayer.getSkill();
-                int seed = World.getRandomNumber(0, (int) total);
+                seed = World.getRandomNumber(0, (int) total);
                 double mid = total / 2;
                 if (seed >= mid + 100) {
                     dirPlayer.kill(radPlayer);
@@ -96,8 +109,15 @@ public class Game {
 
     }
 
+    public void banHero(Hero hero){
+        pickPhase.remove(hero);
+        hero.incrementBans();
+    }
+
     public void updatePerf(ArrayList<InGamePlayer> a, ArrayList<InGamePlayer> b) {
         for (int i = 0; i < 5; i++) {
+            a.get(i).hero.incrementLosses();
+            b.get(i).hero.incrementWins();
             if (a.get(i).kills > a.get(i).deaths) {
                 a.get(i).player.updateNetPerf(1);
             } else if (a.get(i).kills < a.get(i).deaths) {
@@ -136,6 +156,7 @@ public class Game {
         double netWorth;
         boolean alive;
         InGameTeam team;
+        Hero hero;
 
         public InGamePlayer(Player p) {
             kills = 0;
@@ -152,6 +173,27 @@ public class Game {
             this.team = team;
         }
 
+        public void pickHero(){
+            int seed = World.getRandomNumber(Math.max(0,pickPhase.size()-5),pickPhase.size()-1);
+            int rand = World.getRandomNumber(0,5);
+            if (rand >= 3) {
+                if(rand == 4){
+                    pickHero(pickPhase.remove(seed));
+                }
+                else{
+                    pickHero(pickPhase.remove(rand));
+                }
+            }
+            else{
+                pickHero(pickPhase.remove(0));
+            }
+        }
+        public void pickHero(Hero hero){
+            this.hero = hero;
+            hero.pickHero();
+        }
+
+
         public void addNetWorth(double nw){
             netWorth += nw;
             if(netWorth <= 0){
@@ -166,7 +208,7 @@ public class Game {
             this.id = id;
         }
         public double getSkill() {
-            return skill + getNetWorth();
+            return (skill + getNetWorth())*((hero.getStrength()*player.getHeroMap().get(hero))/1000);
         }
 
         public void die() {
@@ -207,7 +249,7 @@ public class Game {
         }
 
         public String toString() {
-            return (player.toString() + " | " + kills + "/" + deaths + "/" +  assists + " | " + (int)getNetWorth());
+            return (player.toString() + " as " + hero.name + " | " + kills + "/" + deaths + "/" +  assists + " | " + (int)getNetWorth());
         }
     }
 

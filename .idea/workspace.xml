@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.02">
+      <change afterPath="$PROJECT_DIR$/src/game/GameHistory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game/GameVersion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/PlayerContract.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/PlayerContract.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/Tournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Tournament.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Hero.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -28,7 +29,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2HNfNWwS6nj00Bf9t1mRLwnLzGM" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -81,6 +84,7 @@
       <workItem from="1669623774866" duration="9764000" />
       <workItem from="1669675715693" duration="3743000" />
       <workItem from="1669715772911" duration="11130000" />
+      <workItem from="1669738261259" duration="8227000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
