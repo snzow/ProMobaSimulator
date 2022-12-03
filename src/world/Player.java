@@ -20,6 +20,12 @@ public class Player {
 
     double earnings;
 
+    long avgK;
+
+    long avgD;
+
+    long avgNW;
+
     int netPerformance;
     int yearsWithTeam;
     ArrayList<yearResults> history;
@@ -42,6 +48,9 @@ public class Player {
             double seed = World.getRandomNumber(7,13)/10.0;
             heroMap.put(h,seed);
         }
+        avgD = 0;
+        avgK = 0;
+        avgNW = 0;
     }
 
     public Player(String s){
@@ -59,6 +68,45 @@ public class Player {
         for(Hero h : World.heroList) {
             double seed = World.getRandomNumber(7, 13) / 10.0;
             heroMap.put(h, seed);
+        }
+    }
+
+    public long getAvgK() {
+        return avgK;
+    }
+
+    public void updateAvgK(long avgK) {
+        if(this.avgK == 0){
+            this.avgK = avgK;
+        }
+        else{
+            this.avgK = (avgK + this.avgK)/2;
+        }
+    }
+
+    public long getAvgD() {
+        return avgD;
+    }
+
+    public void updateAvgD(long avgD) {
+        if(this.avgD == 0){
+            this.avgD = avgD;
+        }
+        else{
+            this.avgD = (avgD + this.avgD)/2;
+        }
+    }
+
+    public long getAvgNW() {
+        return avgNW;
+    }
+
+    public void updateAvgNW(long avgNW) {
+        if(this.avgNW == 0){
+            this.avgNW = avgNW;
+        }
+        else{
+            this.avgNW = (avgNW + this.avgNW)/2;
         }
     }
 

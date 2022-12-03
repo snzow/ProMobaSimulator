@@ -1,5 +1,6 @@
 package world;
 
+import game.GameVersion;
 import game.Hero;
 
 import java.text.NumberFormat;
@@ -8,7 +9,7 @@ import java.util.*;
 import static java.util.Comparator.*;
 
 public class World {
-    static int gameVersion;
+
     static Map<String,Player> playerMap;
     static ArrayList<Player> playerList;
     static ArrayList<Player> freeAgents;
@@ -25,6 +26,8 @@ public class World {
 
     static Team FREE_AGENT = new Team("Free Agent", "FA");
 
+    static GameVersion patch;
+
 
     public static void main(String[] args) {
         playerMap = new HashMap<>();
@@ -32,6 +35,7 @@ public class World {
         initializeFreeAgents();
         initializeTeams();
         initializeTournaments();
+        patch = new GameVersion();
         Scanner kb = new Scanner(System.in);
         runFreeAgency(true);
         int seasonProg = 0;
@@ -227,10 +231,10 @@ public class World {
     public static void patchHeroes(){
 
         int heroListSize = heroList.size();
-        gameVersion++;
+        patch.incrementGameVersion();
         System.out.println("---Major Patch---");
         heroList.sort(Comparator.comparing(Hero::getPicks,Comparator.reverseOrder()));
-        System.out.println("Version " + gameVersion);
+        System.out.println("Version " + patch.toString());
         System.out.println("---Previous Version Most Picked---");
         for (int i = 0; i < 5; i++){
             System.out.println((i+1) + ". " + heroList.get(i).toString());
@@ -303,7 +307,6 @@ public class World {
     }
 
     public static void initializeHeroes(){
-        gameVersion = 1;
         heroList = new ArrayList<>();
         heroMap = new HashMap<>();
         //1-5

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.02">
-      <change afterPath="$PROJECT_DIR$/src/game/GameHistory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/game/GameVersion.java" afterDir="false" />
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.03 HEROES!!!!!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/GameVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameVersion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Hero.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
@@ -84,7 +83,8 @@
       <workItem from="1669623774866" duration="9764000" />
       <workItem from="1669675715693" duration="3743000" />
       <workItem from="1669715772911" duration="11130000" />
-      <workItem from="1669738261259" duration="8227000" />
+      <workItem from="1669738261259" duration="9432000" />
+      <workItem from="1670022257303" duration="7775000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
@@ -142,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669632376961</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="v0.03 HEROES!!!!!">
+      <created>1669746580794</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1669746580794</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,6 +175,7 @@
     <MESSAGE value="mre" />
     <MESSAGE value="team wins tracking,code fixed in Game, variables in Game renamed to be more logical" />
     <MESSAGE value="v0.02" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.02" />
+    <MESSAGE value="v0.03 HEROES!!!!!" />
+    <option name="LAST_COMMIT_MESSAGE" value="v0.03 HEROES!!!!!" />
   </component>
 </project>

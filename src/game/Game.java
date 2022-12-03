@@ -74,7 +74,7 @@ public class Game {
                     updatePerf(rad.getPlayers(), dir.getPlayers());
                     radiant.incrementLosses();
                     dire.incrementWins();
-                    //printResults(dir,rad);
+                    printResults(dir,rad);
                     return dire;
                 }
                 else {
@@ -83,25 +83,20 @@ public class Game {
                     dire.incrementLosses();
                     radiant.incrementWins();
                     updatePerf(dir.getPlayers(), rad.getPlayers());
-                    //printResults(rad,dir);
+                    printResults(rad,dir);
                     return radiant;
                 }
             }
             else {
                 radPlayer = rad.getPlayer(radP);
                 dirPlayer = dir.getPlayer(dirP);
-                double total = radPlayer.getSkill() + dirPlayer.getSkill();
-                seed = World.getRandomNumber(0, (int) total);
-                double mid = total / 2;
-                if (seed >= mid + 100) {
-                    dirPlayer.kill(radPlayer);
-                    rad.killPlayer(radPlayer);
-                } else if (seed <= mid - 100) {
-                    radPlayer.kill(dirPlayer);
-                    dir.killPlayer(dirPlayer);
-                }
-                rad.status();
-                dir.status();
+                ArrayList<InGamePlayer> battleResult = radPlayer.battlePlayer(dirPlayer);
+                InGamePlayer winner = battleResult.get(0);
+                InGamePlayer loser = battleResult.get(1);
+                winner.kill(loser);
+                loser.team.killPlayer(loser);
+                rad.status(dir.getKills()-rad.getKills());
+                dir.status(rad.getKills() - dir.getKills());
                 radP = World.getRandomNumber(0, rad.getLivingPlayersSize());
                 dirP = World.getRandomNumber(0, dir.getLivingPlayersSize());
             }
@@ -116,17 +111,27 @@ public class Game {
 
     public void updatePerf(ArrayList<InGamePlayer> a, ArrayList<InGamePlayer> b) {
         for (int i = 0; i < 5; i++) {
+            Player player1 = a.get(i).player;
+            Player player2 = b.get(i).player;
             a.get(i).hero.incrementLosses();
             b.get(i).hero.incrementWins();
+            /*
+            player1.updateAvgK(a.get(i).kills);
+            player1.updateAvgD(a.get(i).deaths);
+            player1.updateAvgNW((long)a.get(i).getNetWorth());
+            player2.updateAvgK(b.get(i).kills);
+            player2.updateAvgD(b.get(i).deaths);
+            player2.updateAvgNW((long)b.get(i).getNetWorth());
+            */
             if (a.get(i).kills > a.get(i).deaths) {
-                a.get(i).player.updateNetPerf(1);
+                player1.updateNetPerf(1);
             } else if (a.get(i).kills < a.get(i).deaths) {
-                a.get(i).player.updateNetPerf(-1);
+                player1.updateNetPerf(-1);
             }
             if (b.get(i).kills > b.get(i).deaths) {
-                b.get(i).player.updateNetPerf(1);
+                player2.updateNetPerf(1);
             } else if (b.get(i).kills < b.get(i).deaths) {
-                b.get(i).player.updateNetPerf(-1);
+                player2.updateNetPerf(-1);
             }
         }
     }
@@ -158,6 +163,8 @@ public class Game {
         InGameTeam team;
         Hero hero;
 
+        double killBounty;
+
         public InGamePlayer(Player p) {
             kills = 0;
             deaths = 0;
@@ -168,6 +175,7 @@ public class Game {
             netWorth = 1000;
             assists = 0;
             alive = true;
+            killBounty = 0;
         }
         public void setTeam(InGameTeam team){
             this.team = team;
@@ -193,11 +201,44 @@ public class Game {
             hero.pickHero();
         }
 
+        public ArrayList<InGamePlayer> battlePlayer(InGamePlayer enemy){
+            ArrayList<InGamePlayer> results = new ArrayList<>();
+            double myHp = this.hero.hp;
+            double enemyHp = enemy.hero.hp;
+            double mySkill = this.getSkill() * ((double) World.getRandomNumber(8,12)/10);
+            double enemySkill = enemy.getSkill() * ((double) World.getRandomNumber(8,12)/10);
+            int seed = World.getRandomNumber(0,(int)mySkill + (int)enemySkill);
+            while(enemyHp > 0 && myHp > 0){
+                if(seed <= mySkill){
+                    if (seed <= mySkill/2){
+                        enemyHp -= this.hero.dmg;
+                    }
+                }
+                else{
+                    if (seed >= mySkill + enemySkill/2){
+                        myHp -= enemy.hero.dmg;
+                    }
+                }
+                seed = World.getRandomNumber(0,(int)mySkill + (int)enemySkill);
+            }
+            if(enemyHp <= 0){
+                results.add(this);
+                results.add(enemy);
+            }
+            else{
+                results.add(enemy);
+                results.add(this);
+            }
+            return results;
+
+
+        }
+
 
         public void addNetWorth(double nw){
             netWorth += nw;
             if(netWorth <= 0){
-                netWorth = 1000;
+                netWorth = 1;
             }
         }
         public int getID(){
@@ -224,16 +265,22 @@ public class Game {
             if(formula >= -200){
                 if (formula >= 0){
                     addNetWorth(100 + formula/2);
-                    p.addNetWorth(-100 - formula/2);
+                    p.addNetWorth(-formula/2);
                 }
                 else{
                     addNetWorth(100);
-                    p.addNetWorth(-100);
+                    p.addNetWorth(-50);
                 }
             }
             else{
                 addNetWorth(50);
-                p.addNetWorth(-50);
+                p.addNetWorth(-25);
+            }
+            addNetWorth(p.killBounty*100);
+            p.killBounty = 0;
+            killBounty *= 2;
+            if(killBounty >= 20){
+                killBounty = 20;
             }
             for(InGamePlayer teammate : team.getPlayers()){
                 if(teammate.alive){
@@ -365,10 +412,17 @@ public class Game {
         public ArrayList<InGamePlayer> getPlayers(){
             return players;
         }
-        public void status() {
+        public void status(int killDiff) {
+            int nwMod = 0;
+            if(killDiff >= 0){
+                nwMod = 50* killDiff;
+            }
             for(InGamePlayer p : players){
                 if(!deadPlayers.containsKey(p.getID())){
-                    p.addNetWorth(400 + p.kills*10);
+                    p.addNetWorth(750 + nwMod);
+                }
+                else{
+                    p.addNetWorth(250);
                 }
             }
             if(deadPlayers.size() == 5){
