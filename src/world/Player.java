@@ -28,6 +28,8 @@ public class Player {
 
     int netPerformance;
     int yearsWithTeam;
+
+    int mmr;
     ArrayList<yearResults> history;
 
     HashMap<Hero, Double> heroMap;
@@ -51,6 +53,7 @@ public class Player {
         avgD = 0;
         avgK = 0;
         avgNW = 0;
+        mmr = World.getRandomNumber(5000,6000);
     }
 
     public Player(String s){
@@ -69,6 +72,24 @@ public class Player {
             double seed = World.getRandomNumber(7, 13) / 10.0;
             heroMap.put(h, seed);
         }
+        avgD = 0;
+        avgK = 0;
+        avgNW = 0;
+        mmr = World.getRandomNumber(5000,6000);
+    }
+
+    public Player(String s, int sk){
+        name = s;
+        skill = sk;
+        age = World.getRandomNumber(13,19);
+        team = World.FREE_AGENT;
+        prevTeam = World.FREE_AGENT;
+        heroMap =  new HashMap<>(World.heroMap);
+        for(Hero h : World.heroList) {
+            double seed = World.getRandomNumber(7, 13) / 10.0;
+            heroMap.put(h, seed);
+        }
+        mmr = World.getRandomNumber(4500,5500);
     }
 
     public long getAvgK() {
@@ -128,6 +149,14 @@ public class Player {
 
     public int getNetPerf(){
         return netPerformance;
+    }
+
+    public void updateMmr(int change){
+        mmr += change;
+    }
+
+    public int getMmr(){
+        return mmr;
     }
 
     public void payPlayer(double p){

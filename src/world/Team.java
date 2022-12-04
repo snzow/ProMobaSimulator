@@ -36,7 +36,7 @@ public class Team {
     public Team(String n,String t){
         name = n;
         tag = t;
-        balance = 100000;
+        balance = 350000;
         prizeMoneyY = 0;
         majorsWon = 0;
         players = new ArrayList<>();
@@ -323,6 +323,10 @@ public class Team {
     }
     public void addSigning(Player p){
         freeAgency.addPickedUp(p);
+    }
+
+    public void setRoster(ArrayList<Player> players){
+        this.players = players;
     }
 
     private class TeamSeasonRecord{

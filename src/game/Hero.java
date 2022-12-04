@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
 
+import static java.lang.Math.random;
 import static java.lang.Math.round;
 
 public class Hero {
@@ -24,18 +25,21 @@ public class Hero {
     int bans;
     int bansP;
 
+    double previousPatchStrength;
+
     public Hero(String n){
         name = n;
         dmg = World.getRandomNumber(80,120);
         hp = World.getRandomNumber(800,1200);
-        int picksP = 0;
-        int winsP = 0;
-        int lossesP = 0;
-        int wins = 0;
-        int losses = 0;
-        int picks = 0;
-        int bans = 0;
-        int bansP = 0;
+        picksP = 0;
+        winsP = 0;
+        lossesP = 0;
+        wins = 0;
+        losses = 0;
+        picks = 0;
+        bans = 0;
+        bansP = 0;
+        previousPatchStrength = dmg*10 + hp;
     }
 
     public void pickHero(){
@@ -87,45 +91,48 @@ public class Hero {
     }
 
     public double getMetaStrength(){
-        return dmg*10 + hp + picksP*5;
+        return dmg*10 + hp * getWinrate();
     }
-    public void patchHero(){
+    public void patchHero(double minStrength, double maxStrength){
+        double medianStrength = (maxStrength + minStrength) / 2;
+        previousPatchStrength = getStrength();
         double statMod = World.getRandomNumber(0,30);
-        if (getWinrate() <= .47){
+        double randomSeed = (double)World.getRandomNumber(8,12)/10;
+        if ( getMetaStrength() <= medianStrength - 100){
             if(statMod >= 15){
-                dmg += 25;
+                dmg += 15*randomSeed;
             }
             else{
-                hp += 250;
+                hp += 150*randomSeed;
             }
 
         }
-        else if(.47 < getWinrate() && getWinrate() < .53){
+        else if(getMetaStrength() > medianStrength - 100 && getMetaStrength() < medianStrength + 100){
             int seed = World.getRandomNumber(0,2);
             if(seed == 0){
                 if(statMod >= 15){
-                    dmg -= 25;
+                    dmg -= 10*randomSeed;
                 }
                 else{
-                    hp -= 250;
+                    hp -= 100*randomSeed;
                 }
 
             }
             if (seed == 2){
                 if(statMod >= 15){
-                    dmg += 25;
+                    dmg += 10*randomSeed;
                 }
                 else{
-                    hp += 250;
+                    hp += 100*randomSeed;
                 }
             }
         }
         else{
             if(statMod >= 15){
-                dmg -= 25;
+                dmg -= 15*randomSeed;
             }
             else{
-                hp -= 250;
+                hp -= 150*randomSeed;
             }
         }
         picksP = 0;
@@ -134,8 +141,12 @@ public class Hero {
         bansP = 0;
     }
 
-    public String toString(){
+    public String toStringAllStats(){
         return name + " " + picksP + "/" + bansP + " Picks/Bans | " + getWinrate() + " Winrate | " + (int)(dmg*10 + hp) + " SI";
+    }
+
+    public String toStringNoWinrate(){
+        return name + " "  + (int)(dmg*10 + hp) + " SI | " + (int)(getStrength() - previousPatchStrength);
     }
 
 }

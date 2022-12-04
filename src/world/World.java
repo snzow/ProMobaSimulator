@@ -2,7 +2,9 @@ package world;
 
 import game.GameVersion;
 import game.Hero;
+import game.LadderGame;
 
+import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -25,6 +27,8 @@ public class World {
     static Map<Hero,Double> heroMap;
 
     static Team FREE_AGENT = new Team("Free Agent", "FA");
+    public static Team RADIANT = new Team("Radiant", "");
+    public static Team DIRE = new Team("Dire", "");
 
     static GameVersion patch;
 
@@ -48,9 +52,10 @@ public class World {
             System.out.println("3. Show Player History");
             System.out.println("4. Show Team History");
             System.out.println("5. Show Tournament History");
+            System.out.println("6. Play Ladder Game");
             System.out.println("----------");
             int inp = kb.nextInt();
-
+            LadderGame ladderGame = new LadderGame();
             if (inp == 1) {
                 if (seasonProg == events.size()){
                     seasonProg = 0;
@@ -65,6 +70,9 @@ public class World {
                 }
                 events.get(seasonProg).runTournament(teams);
                 seasonProg++;
+                for(int i = 0; i < 50; i++){
+                    ladderGame.playGame("x");
+                }
 
             }
             else if (inp == 2){
@@ -106,10 +114,16 @@ public class World {
                     System.out.println("Tournament Not Found");
                 }
             }
+            else if (inp == 6){
+                ladderGame.playGame("print");
+            }
         }
 
     }
 
+    public static ArrayList<Player> getFreeAgents(){
+        return (ArrayList<Player>) freeAgents.clone();
+    }
     /**
      * runs the free agency process, meant to be done at the end of the year
      */
@@ -198,14 +212,24 @@ public class World {
         int playersToList = 25;
         if(yearEnd){
             playersToList = 10;
+            System.out.println("----------------");
             System.out.println("Year end awards");
         }
-        System.out.println("Player Rankings");
+        System.out.println("Top " + playersToList + " players");
+        System.out.println("----------------");
         for(int i = 0; i < playersToList; i++){
             Player p = playerList.get(i);System.out.println( (i + 1) + ". " + p);
             }
-
+        System.out.println("----------------");
+        System.out.println("MMR Leaderboards");
+        System.out.println("----------------");
+        playerList.sort(Comparator.comparing(Player::getMmr, reverseOrder()));
+        for(int i = 0; i < playersToList; i++){
+            Player p = playerList.get(i);System.out.println( (i + 1) + ". " + p + " | " + p.getMmr());
+        }
+        System.out.println("----------------");
         System.out.println("Team Rankings | Tournaments Won (Majors won) | Team Balance");
+        System.out.println("----------------");
         if(yearEnd){
             teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         }
@@ -233,23 +257,43 @@ public class World {
         int heroListSize = heroList.size();
         patch.incrementGameVersion();
         System.out.println("---Major Patch---");
-        heroList.sort(Comparator.comparing(Hero::getPicks,Comparator.reverseOrder()));
+        heroList.sort(Comparator.comparing(Hero::getMetaStrength,Comparator.reverseOrder()));
         System.out.println("Version " + patch.toString());
-        System.out.println("---Previous Version Most Picked---");
-        for (int i = 0; i < 5; i++){
-            System.out.println((i+1) + ". " + heroList.get(i).toString());
+        System.out.println("---Previous Version Strongest Heroes---");
+        double patchMetaStrengthMax = 0;
+        double patchMetaStrengthMin = 10000000;
+        for (int i = 0; i < heroListSize; i++){
+            if (heroList.get(i).getMetaStrength() > patchMetaStrengthMax){
+                patchMetaStrengthMax = heroList.get(i).getMetaStrength();
+            }
+            else if (heroList.get(i).getMetaStrength() < patchMetaStrengthMin){
+                patchMetaStrengthMin = heroList.get(i).getMetaStrength();
+            }
+
         }
-        heroList.sort(Comparator.comparing(Hero::getPicks));
+        for(int i = 0; i < 5; i++){
+            System.out.println((i+1) + ". " + heroList.get(i).toStringAllStats());
+        }
+        /*heroList.sort(Comparator.comparing(Hero::getPicks));
         System.out.println("---Previous Version Least Picked---");
         for (int i = 0; i < 5; i++){
             System.out.println((i+1) + ". " + heroList.get(i).toString());
         }
         heroList.sort(Comparator.comparing(Hero::getMetaStrength,Comparator.reverseOrder()));
+         */
         for(Hero h : heroList){
-            h.patchHero();
+            h.patchHero(patchMetaStrengthMin,patchMetaStrengthMax);
+        }
+        System.out.println("---New Patch Expected Top Heroes---");
+        heroList.sort(Comparator.comparing(Hero::getStrength,Comparator.reverseOrder()));
+        for (int i = 0; i < 5; i++){
+            System.out.println((i+1) + ". " + heroList.get(i).toStringNoWinrate());
         }
     }
 
+    public static ArrayList<Player> getPlayerList(){
+        return (ArrayList<Player>) playerList.clone();
+    }
     private static void c(String s){
         createPlayer(s);
     }

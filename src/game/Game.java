@@ -45,9 +45,9 @@ public class Game {
     public Team playGame() {
         InGameTeam rad = new InGameTeam("Radiant",radiant);
         InGameTeam dir = new InGameTeam("Dire",dire);
-        ArrayList<Player> tmpA = radiant.getRoster();
-        ArrayList<Player> tmpB = dire.getRoster();
-        pickPhase.sort(Comparator.comparing(Hero::getWinrate,Comparator.reverseOrder()));
+        ArrayList<Player> radiantArrayList = radiant.getRoster();
+        ArrayList<Player> direArrayList = dire.getRoster();
+        pickPhase.sort(Comparator.comparing(Hero::getStrength,Comparator.reverseOrder()));
         int seed = World.getRandomNumber(0,6);
         banHero(pickPhase.get(seed));
         banHero(pickPhase.get(seed));
@@ -55,8 +55,8 @@ public class Game {
         banHero(pickPhase.get(seed));
         banHero(pickPhase.get(seed));
         for (int i = 0; i < 5; i++) {
-            InGamePlayer radTemp = new InGamePlayer(tmpA.get(i));
-            InGamePlayer dirTemp = new InGamePlayer(tmpB.get(i));
+            InGamePlayer radTemp = new InGamePlayer(radiantArrayList.get(i));
+            InGamePlayer dirTemp = new InGamePlayer(direArrayList.get(i));
             radTemp.pickHero();
             dirTemp.pickHero();
             rad.addPlayer(radTemp);
@@ -74,7 +74,7 @@ public class Game {
                     updatePerf(rad.getPlayers(), dir.getPlayers());
                     radiant.incrementLosses();
                     dire.incrementWins();
-                    printResults(dir,rad);
+                    //printResults(dir,rad);
                     return dire;
                 }
                 else {
@@ -83,8 +83,72 @@ public class Game {
                     dire.incrementLosses();
                     radiant.incrementWins();
                     updatePerf(dir.getPlayers(), rad.getPlayers());
-                    printResults(rad,dir);
+                    //printResults(rad,dir);
                     return radiant;
+                }
+            }
+            else {
+                radPlayer = rad.getPlayer(radP);
+                dirPlayer = dir.getPlayer(dirP);
+                ArrayList<InGamePlayer> battleResult = radPlayer.battlePlayer(dirPlayer);
+                InGamePlayer winner = battleResult.get(0);
+                InGamePlayer loser = battleResult.get(1);
+                winner.kill(loser);
+                loser.team.killPlayer(loser);
+                rad.status(dir.getKills()-rad.getKills());
+                dir.status(rad.getKills() - dir.getKills());
+                radP = World.getRandomNumber(0, rad.getLivingPlayersSize());
+                dirP = World.getRandomNumber(0, dir.getLivingPlayersSize());
+            }
+        }
+
+    }
+
+    public void playGame(Team radiantTeam, Team direTeam, String s) {
+        InGameTeam rad = new InGameTeam("Radiant",radiantTeam);
+        InGameTeam dir = new InGameTeam("Dire",direTeam);
+        ArrayList<Player> radiantArrayList = radiantTeam.getRoster();
+        ArrayList<Player> direArrayList = direTeam.getRoster();
+        pickPhase.sort(Comparator.comparing(Hero::getStrength,Comparator.reverseOrder()));
+        int seed = World.getRandomNumber(0,6);
+        banHero(pickPhase.get(seed));
+        banHero(pickPhase.get(seed));
+        seed = World.getRandomNumber(0,2);
+        banHero(pickPhase.get(seed));
+        banHero(pickPhase.get(seed));
+        for (int i = 0; i < 5; i++) {
+            InGamePlayer radTemp = new InGamePlayer(radiantArrayList.get(i));
+            InGamePlayer dirTemp = new InGamePlayer(direArrayList.get(i));
+            radTemp.pickHero();
+            dirTemp.pickHero();
+            rad.addPlayer(radTemp);
+            dir.addPlayer(dirTemp);
+        }
+        int radP = World.getRandomNumber(0, 4);
+        int dirP = World.getRandomNumber(0, 4);
+        InGamePlayer radPlayer;
+        InGamePlayer dirPlayer;
+        while (true) {
+            if (dir.noTowers() || rad.noTowers()) {
+                if (rad.noTowers()) {
+                    for(int i = 0; i < 5; i++){
+                        radiantArrayList.get(i).updateMmr(-25);
+                        direArrayList.get(i).updateMmr(25);
+                    }
+                    if(s == "print"){
+                        printResults(dir,rad,"s");
+                    }
+                    return;
+                }
+                else {
+                    for(int i = 0; i < 5; i++){
+                        radiantArrayList.get(i).updateMmr(25);
+                        direArrayList.get(i).updateMmr(-25);
+                    }
+                    if(s == "print"){
+                        printResults(dir,rad,"s");
+                    }
+                    return;
                 }
             }
             else {
@@ -149,6 +213,20 @@ public class Game {
         }
     }
 
+    public void printResults(InGameTeam winner, InGameTeam loser,String s){
+        System.out.println("-------------");
+        System.out.println(winner.getTeam().toString() + " Defeat " + loser.getTeam().toString());
+        System.out.println("-------------");
+        for (InGamePlayer p : winner.getPlayers()) {
+            System.out.println(p.toString() + " | " + p.getPlayer().getMmr());
+        }
+        System.out.println("-------------");
+        for (InGamePlayer p : loser.getPlayers()) {
+            System.out.println(p.toString() + " | " + p.getPlayer().getMmr());
+        }
+
+    }
+
     private class InGamePlayer {
         int kills;
         int deaths;
@@ -179,6 +257,10 @@ public class Game {
         }
         public void setTeam(InGameTeam team){
             this.team = team;
+        }
+
+        public Player getPlayer(){
+            return player;
         }
 
         public void pickHero(){
@@ -422,7 +504,7 @@ public class Game {
                     p.addNetWorth(750 + nwMod);
                 }
                 else{
-                    p.addNetWorth(250);
+                    p.addNetWorth(250 + nwMod);
                 }
             }
             if(deadPlayers.size() == 5){

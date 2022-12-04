@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.03 HEROES!!!!!">
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.04 whole lotta stuff, more stats, more everything">
+      <change afterPath="$PROJECT_DIR$/src/game/LadderGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game/GameVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameVersion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Hero.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,7 +85,8 @@
       <workItem from="1669675715693" duration="3743000" />
       <workItem from="1669715772911" duration="11130000" />
       <workItem from="1669738261259" duration="9432000" />
-      <workItem from="1670022257303" duration="7775000" />
+      <workItem from="1670022257303" duration="7814000" />
+      <workItem from="1670112331993" duration="6798000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
@@ -149,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669746580794</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="v0.04 whole lotta stuff, more stats, more everything">
+      <created>1670048988417</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1670048988417</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +185,17 @@
     <MESSAGE value="team wins tracking,code fixed in Game, variables in Game renamed to be more logical" />
     <MESSAGE value="v0.02" />
     <MESSAGE value="v0.03 HEROES!!!!!" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.03 HEROES!!!!!" />
+    <MESSAGE value="v0.04 whole lotta stuff, more stats, more everything" />
+    <option name="LAST_COMMIT_MESSAGE" value="v0.04 whole lotta stuff, more stats, more everything" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IndexOutOfBoundsException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
