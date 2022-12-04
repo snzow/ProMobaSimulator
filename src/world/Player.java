@@ -30,6 +30,8 @@ public class Player {
     int yearsWithTeam;
 
     int mmr;
+    int globalMmrRank;
+    int lastYearGlobalMmrRank;
     ArrayList<yearResults> history;
 
     HashMap<Hero, Double> heroMap;
@@ -53,7 +55,9 @@ public class Player {
         avgD = 0;
         avgK = 0;
         avgNW = 0;
-        mmr = World.getRandomNumber(5000,6000);
+        mmr = skill+5000;
+        globalMmrRank = 0;
+        lastYearGlobalMmrRank = 0;
     }
 
     public Player(String s){
@@ -75,7 +79,9 @@ public class Player {
         avgD = 0;
         avgK = 0;
         avgNW = 0;
-        mmr = World.getRandomNumber(5000,6000);
+        mmr = skill+5000;
+        globalMmrRank = 0;
+        lastYearGlobalMmrRank = 0;
     }
 
     public Player(String s, int sk){
@@ -89,9 +95,22 @@ public class Player {
             double seed = World.getRandomNumber(7, 13) / 10.0;
             heroMap.put(h, seed);
         }
-        mmr = World.getRandomNumber(4500,5500);
+        mmr = skill+5000;
+        globalMmrRank = 0;
+        lastYearGlobalMmrRank = 0;
     }
 
+    public int getGlobalMmrRank(){
+        return globalMmrRank;
+    }
+    public void setGlobalMmrRank(int newRank){
+        lastYearGlobalMmrRank = globalMmrRank;
+        globalMmrRank = newRank;
+    }
+
+    public int getLastYearGlobalMmrRank(){
+        return lastYearGlobalMmrRank;
+    }
     public long getAvgK() {
         return avgK;
     }
@@ -269,7 +288,7 @@ public class Player {
     }
     private class yearResults{
         Team team;
-        double ySkill;
+        int mmr;
         int tourneysWon;
         int majorsWon;
         int ti;
@@ -277,7 +296,7 @@ public class Player {
 
         public yearResults(){
             team = getTeam();
-            ySkill = getSkill();
+            mmr = getMmr();
             tourneysWon = team.getTourneysWon(0);
             majorsWon = team.getMajorsWon(0);
             ti = team.getTiWon(0);
@@ -290,7 +309,7 @@ public class Player {
             if (ti == 1){
                 z = " TI Winner";
             }
-            return (name + " | " + team + " | " + ySkill + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(salary) + " | " + z);
+            return (name + " | " + team + " | " + mmr + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(salary) + " | " + z);
         }
     }
 }

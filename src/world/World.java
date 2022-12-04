@@ -154,7 +154,7 @@ public class World {
                 Player p = team.players.get(j);
             }
         }
-        freeAgents.sort(Comparator.comparing(Player::getSkill,reverseOrder()));
+        freeAgents.sort(Comparator.comparing(Player::getMmr,reverseOrder()));
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         @SuppressWarnings("unchecked")
         ArrayList<Team> teamsToFA = (ArrayList<Team>) teams.clone();
@@ -221,11 +221,22 @@ public class World {
             Player p = playerList.get(i);System.out.println( (i + 1) + ". " + p);
             }
         System.out.println("----------------");
-        System.out.println("MMR Leaderboards");
+        System.out.println("Global MMR Leaderboards");
         System.out.println("----------------");
         playerList.sort(Comparator.comparing(Player::getMmr, reverseOrder()));
         for(int i = 0; i < playersToList; i++){
-            Player p = playerList.get(i);System.out.println( (i + 1) + ". " + p + " | " + p.getMmr());
+            Player p = playerList.get(i);
+            p.setGlobalMmrRank(playerList.indexOf(p) + 1);
+            System.out.println( (i + 1) + ". " + p + " | " + p.getMmr());
+        }
+        System.out.println("----------------");
+        System.out.println("Unsigned MMR Leaderboards");
+        System.out.println("----------------");
+        freeAgents.sort(Comparator.comparing(Player::getMmr, reverseOrder()));
+        for(int i = 0; i < playersToList; i++){
+            Player p = freeAgents.get(i);
+            p.setGlobalMmrRank(playerList.indexOf(p) + 1);
+            System.out.println( "(Rank " + p.getGlobalMmrRank() + ") " + p + " | " + p.getMmr());
         }
         System.out.println("----------------");
         System.out.println("Team Rankings | Tournaments Won (Majors won) | Team Balance");
@@ -607,5 +618,18 @@ public class World {
         c("UGP");
         c("notsO");
         c("fab");
+        //146-150
+        c("sanST");
+        c("canada");
+        c("duvet");
+        c("CloutChase");
+        c("beez");
+        //151-155
+        c("Ok2siCK");
+        c("MOth");
+        c("vicious");
+        c("spanner");
+        c("chaoz");
+
     }
 }

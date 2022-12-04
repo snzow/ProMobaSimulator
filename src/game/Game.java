@@ -116,9 +116,12 @@ public class Game {
         seed = World.getRandomNumber(0,2);
         banHero(pickPhase.get(seed));
         banHero(pickPhase.get(seed));
+        double gameAvgMmr = radiantArrayList.get(0).getMmr();
         for (int i = 0; i < 5; i++) {
             InGamePlayer radTemp = new InGamePlayer(radiantArrayList.get(i));
+            gameAvgMmr = (radiantArrayList.get(i).getMmr() + gameAvgMmr)/2.0;
             InGamePlayer dirTemp = new InGamePlayer(direArrayList.get(i));
+            gameAvgMmr = (direArrayList.get(i).getMmr() + gameAvgMmr)/2.0;
             radTemp.pickHero();
             dirTemp.pickHero();
             rad.addPlayer(radTemp);
@@ -131,22 +134,24 @@ public class Game {
         while (true) {
             if (dir.noTowers() || rad.noTowers()) {
                 if (rad.noTowers()) {
+                    seed = World.getRandomNumber(25,35);
                     for(int i = 0; i < 5; i++){
-                        radiantArrayList.get(i).updateMmr(-25);
-                        direArrayList.get(i).updateMmr(25);
+                        radiantArrayList.get(i).updateMmr(-(seed));
+                        direArrayList.get(i).updateMmr(seed);
                     }
                     if(s == "print"){
-                        printResults(dir,rad,"s");
+                        printResults(dir,rad,"s",(int)gameAvgMmr);
                     }
                     return;
                 }
                 else {
+                    seed = World.getRandomNumber(25,35);
                     for(int i = 0; i < 5; i++){
-                        radiantArrayList.get(i).updateMmr(25);
-                        direArrayList.get(i).updateMmr(-25);
+                        radiantArrayList.get(i).updateMmr(seed);
+                        direArrayList.get(i).updateMmr(-(seed));
                     }
                     if(s == "print"){
-                        printResults(dir,rad,"s");
+                        printResults(dir,rad,"s",(int)gameAvgMmr);
                     }
                     return;
                 }
@@ -179,14 +184,12 @@ public class Game {
             Player player2 = b.get(i).player;
             a.get(i).hero.incrementLosses();
             b.get(i).hero.incrementWins();
-            /*
             player1.updateAvgK(a.get(i).kills);
             player1.updateAvgD(a.get(i).deaths);
             player1.updateAvgNW((long)a.get(i).getNetWorth());
             player2.updateAvgK(b.get(i).kills);
             player2.updateAvgD(b.get(i).deaths);
             player2.updateAvgNW((long)b.get(i).getNetWorth());
-            */
             if (a.get(i).kills > a.get(i).deaths) {
                 player1.updateNetPerf(1);
             } else if (a.get(i).kills < a.get(i).deaths) {
@@ -213,9 +216,9 @@ public class Game {
         }
     }
 
-    public void printResults(InGameTeam winner, InGameTeam loser,String s){
+    public void printResults(InGameTeam winner, InGameTeam loser,String s, int gameAvgMmr){
         System.out.println("-------------");
-        System.out.println(winner.getTeam().toString() + " Defeat " + loser.getTeam().toString());
+        System.out.println(winner.getTeam().toString() + " Defeat " + loser.getTeam().toString() + " | Average MMR: " + gameAvgMmr);
         System.out.println("-------------");
         for (InGamePlayer p : winner.getPlayers()) {
             System.out.println(p.toString() + " | " + p.getPlayer().getMmr());
