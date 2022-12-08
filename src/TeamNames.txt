@@ -28,8 +28,6 @@ FURIA
 FURIA
 Fnatic
 fnc
-Natus Vincere
-Na'Vi
 100 Thieves
 100T
 T1
@@ -50,8 +48,6 @@ Heroic
 Heroic
 MouseSports
 MOUZ
-Vitality
-Vit
 Complexity
 CoL
 paiN Gaming

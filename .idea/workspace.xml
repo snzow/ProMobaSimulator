@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.05 more mmr changes and stuff">
-      <change afterPath="$PROJECT_DIR$/src/TeamNames.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/world/League.java" afterDir="false" />
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.07 players and teams in txt files for easy access and importing. start of work on league feature">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TeamNames.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/TeamNames.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/LadderGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/LadderGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/Tournament.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Tournament.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/PlayerContract.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/PlayerContract.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,7 +89,7 @@
       <workItem from="1670112331993" duration="7410000" />
       <workItem from="1670136308029" duration="2995000" />
       <workItem from="1670395499814" duration="3956000" />
-      <workItem from="1670454463276" duration="8185000" />
+      <workItem from="1670454463276" duration="12496000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
@@ -175,7 +175,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670139318468</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="v0.07 players and teams in txt files for easy access and importing. start of work on league feature">
+      <created>1670491414623</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1670491414623</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -205,7 +212,8 @@
     <MESSAGE value="v0.04 whole lotta stuff, more stats, more everything" />
     <MESSAGE value="v0.05 Matchmaking games on a ranked ladder" />
     <MESSAGE value="v0.05 more mmr changes and stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.05 more mmr changes and stuff" />
+    <MESSAGE value="v0.07 players and teams in txt files for easy access and importing. start of work on league feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="v0.07 players and teams in txt files for easy access and importing. start of work on league feature" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

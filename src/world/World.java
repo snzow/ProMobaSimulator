@@ -33,6 +33,8 @@ public class World {
 
     static GameVersion patch;
 
+    public static ArrayList<Player> matchmakingPool;
+
 
     public static void main(String[] args) throws IOException {
         playerMap = new HashMap<>();
@@ -40,6 +42,7 @@ public class World {
         initializeFreeAgents();
         initializeTeams();
         initializeTournaments();
+        matchmakingPool = (ArrayList<Player>) playerList.clone();
         patch = new GameVersion();
         Scanner kb = new Scanner(System.in);
         runFreeAgency(true);
@@ -71,11 +74,15 @@ public class World {
                 }
                 events.get(seasonProg).runTournament(teams);
                 seasonProg++;
-                for(int i = 0; i < 75; i++){
-                    ladderGame.playGame("x");
-                    ladderGame.playGame("fa");
-                    ladderGame.playGame("pro");
+                playerList.sort(Comparator.comparing(Player::getMmr,reverseOrder()));
+                for(int i = 0; i < 10; i++){
+                    while (matchmakingPool.size() >= 10){
+                        ladderGame.playGame("x",1);
+                    }
+                    matchmakingPool = (ArrayList<Player>) playerList.clone();
                 }
+
+
             }
             else if (inp == 2){
                 showStandingsAwards(false);

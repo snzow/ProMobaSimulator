@@ -36,7 +36,7 @@ public class Team {
     public Team(String n,String t){
         name = n;
         tag = t;
-        balance = 350000;
+        balance = World.getRandomNumber(250000,500000);
         prizeMoneyY = 0;
         majorsWon = 0;
         players = new ArrayList<>();
@@ -58,7 +58,7 @@ public class Team {
         addSigning(p);
         p.yearsWithTeam = 0;
         players.add(p);
-        p.signContract(this, Math.min((int) (balance/9),350000),1);
+        p.signContract(this, Math.min((int) (balance/9),500000),1);
 
     }
 
@@ -352,13 +352,19 @@ public class Team {
 
         public void printRoster(){
             for (Player p : roster){
-                System.out.println(p.getName());
+                if(roster.indexOf(p) < roster.size() - 1){
+                    System.out.print(p.getName() + " - ");
+                }
+                else{
+                    System.out.println(p.getName());
+                }
             }
+            //System.out.println();
         }
 
         public String toString(){
             NumberFormat formatter = NumberFormat.getCurrencyInstance();
-            return tourneyWins + "(" + majorWins + ") | " + wins + "-" +
+            return "Rank " + worldRanking + " | " + tourneyWins + "(" + majorWins + ") | " + wins + "-" +
                     losses + " | " + formatter.format(prizeWinnings);
         }
     }

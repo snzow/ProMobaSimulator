@@ -38,6 +38,8 @@ public class Player {
 
     boolean playedProfessionally;
 
+    int pubGamesY;
+
     public Player(String s, int sk, int a){
         name = s;
         skill = sk;
@@ -61,6 +63,7 @@ public class Player {
         globalMmrRank = 0;
         lastYearGlobalMmrRank = 0;
         playedProfessionally = false;
+        pubGamesY = 0;
     }
 
     public Player(String s){
@@ -86,6 +89,7 @@ public class Player {
         globalMmrRank = 0;
         lastYearGlobalMmrRank = 0;
         playedProfessionally = false;
+        pubGamesY = 0;
     }
 
     public Player(String s, int sk){
@@ -103,6 +107,7 @@ public class Player {
         globalMmrRank = 0;
         lastYearGlobalMmrRank = 0;
         playedProfessionally = false;
+        pubGamesY = 0;
     }
 
     public int getGlobalMmrRank(){
@@ -111,6 +116,14 @@ public class Player {
     public void setGlobalMmrRank(int newRank){
         lastYearGlobalMmrRank = globalMmrRank;
         globalMmrRank = newRank;
+    }
+
+    public int getPubGamesY() {
+        return pubGamesY;
+    }
+
+    public void incrementPubGamesY(){
+        pubGamesY++;
     }
 
     public int getLastYearGlobalMmrRank(){
@@ -211,6 +224,7 @@ public class Player {
         netPerformance = netPerformance /4;
         yearsWithTeam++;
         history.add(new yearResults());
+        pubGamesY = 0;
     }
 
     public int getYearsWithTeam(){
@@ -256,7 +270,7 @@ public class Player {
 
     public void printHistory(){
         System.out.println("------------");
-        System.out.println(name + " Team | Skill | Tournaments Won(Majors Won) + Salary");
+        System.out.println(name + " Team | MMR | Tournaments Won(Majors Won) + Salary");
         int majorsWon = 0;
         int tourneysWon = 0;
         double totalEarnings = 0;
@@ -301,19 +315,21 @@ public class Player {
     }
     private class yearResults{
         Team team;
-        int mmr;
+        int mmrY;
         int tourneysWon;
         int majorsWon;
         int ti;
         double salary;
+        int pubGames;
 
         public yearResults(){
             team = getTeam();
-            mmr = getMmr();
+            mmrY = getMmr();
             tourneysWon = team.getTourneysWon(0);
             majorsWon = team.getMajorsWon(0);
             ti = team.getTiWon(0);
             salary = getSalary();
+            pubGames = getPubGamesY();
         }
 
         public String toString(){
@@ -322,7 +338,7 @@ public class Player {
             if (ti == 1){
                 z = " TI Winner";
             }
-            return (name + " | " + team + " | " + mmr + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(salary) + " | " + z);
+            return (name + " | " + this.team + " | " + this.mmrY + " | " + this.tourneysWon + "(" + this.majorsWon + ") | " + formatter.format(this.salary) + " | " + z + " | " + pubGames);
         }
     }
 }

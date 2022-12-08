@@ -28,7 +28,7 @@ public class PlayerContract {
     public void extendContract(double s, int y){
         salary += team.balance/15;
         salary *= s;
-        salary = Math.min(salary,450000);
+        salary = Math.min(salary,650000);
         yearsRemaining += y;
     }
 
