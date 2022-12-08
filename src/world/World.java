@@ -4,6 +4,7 @@ import game.GameVersion;
 import game.Hero;
 import game.LadderGame;
 
+import java.io.*;
 import java.lang.reflect.Array;
 import java.text.NumberFormat;
 import java.util.*;
@@ -33,7 +34,7 @@ public class World {
     static GameVersion patch;
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         playerMap = new HashMap<>();
         initializeHeroes();
         initializeFreeAgents();
@@ -70,10 +71,11 @@ public class World {
                 }
                 events.get(seasonProg).runTournament(teams);
                 seasonProg++;
-                for(int i = 0; i < 50; i++){
+                for(int i = 0; i < 75; i++){
                     ladderGame.playGame("x");
+                    ladderGame.playGame("fa");
+                    ladderGame.playGame("pro");
                 }
-
             }
             else if (inp == 2){
                 showStandingsAwards(false);
@@ -128,6 +130,7 @@ public class World {
      * runs the free agency process, meant to be done at the end of the year
      */
     public static void runFreeAgency(boolean firstTime){
+        ArrayList<Player> signed = new ArrayList<>();
         showStandingsAwards(true);
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for (Player p : playerList){
@@ -137,6 +140,7 @@ public class World {
             t.setWorldRanking(teams.indexOf(t) + 1);
             t.tickYear();
         }
+        //changes player skill
         for (Player p : playerList){
             if(p.getTeam() != null){
                 int mod = p.getNetPerf() * 3;
@@ -147,7 +151,6 @@ public class World {
             else{
                 p.updateSkill(getRandomNumber(-150,150));
             }
-            p.ageUp();
         }
         for (Team team : teams) {
             for (int j = 0; j < team.getRosterSize(); j++) {
@@ -173,7 +176,8 @@ public class World {
                     while (freeAgents.get(cur).getPrevTeam().equals(t)) {
                         cur++;
                     }
-                    t.signPlayer(freeAgents.remove(cur));
+                    t.signPlayer(freeAgents.get(cur));
+                    signed.add(freeAgents.remove(cur));
                 }
                 teamsToFA.sort(Comparator.comparing(Team::getContractOffer, reverseOrder()));
             }
@@ -187,19 +191,30 @@ public class World {
                         i--;
                     }
                     else{
-                        t.signPlayer(freeAgents.remove(0));
+                        t.signPlayer(freeAgents.get(0));
+                        signed.add(freeAgents.remove(0));
                     }
                 }
             }
         }
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for(Team t : teams){
-            t.printFA();
+            if(teams.indexOf(t) <= 10){
+                t.printFA();
+                t.printRoster();
+            }
             t.clearFA();
-            t.printRoster();
         }
         for(Player p : freeAgents){
             p.setPrevTeam(FREE_AGENT);
+        }
+        System.out.println("---Rookies For Coming Season---");
+        for(Player p : signed){
+            if(!firstTime){
+                if(!p.playedProfessionally){
+                    System.out.println(p.getName() + " -> " + p.getTeam().getTag() + " | MMR: " + p.getMmr());
+                }
+            }
         }
     }
 
@@ -305,59 +320,33 @@ public class World {
     public static ArrayList<Player> getPlayerList(){
         return (ArrayList<Player>) playerList.clone();
     }
-    private static void c(String s){
-        createPlayer(s);
-    }
-    public static void initializeTeams(){
+    public static void initializeTeams() throws IOException {
         teams = new ArrayList<>();
         teamMap = new HashMap<>();
-        //1-4
-        createTeam("Cloud9","C9");
-        createTeam("Team Liquid","Liquid");
-        createTeam("Tundra","Tundra");
-        createTeam("Team Solo Mid","TSM");
-        //5-8
-        createTeam("LGD","LGD");
-        createTeam("Counter Logic Gaming","CLG");
-        createTeam("Team Secret", "Secret");
-        createTeam("OG","OG");
-        //9-12
-        createTeam("OpTic Gaming", "OpTic");
-        createTeam("Beastcoast","bc");
-        createTeam("FaZe Clan", "FaZe");
-        createTeam("NRG eSports", "NRG");
-        //13-16
-        createTeam("G2 eSports", "G2");
-        createTeam("FURIA", "FURIA");
-        createTeam("Fnatic", "fnc");
-        createTeam("Natus Vincere", "Na'Vi");
-        //17-20
-        createTeam("100 Thieves", "100T");
-        createTeam("T1", "T1");
-        createTeam("Alliance","[A]");
-        createTeam("Team Spirit","Spirit");
-        //21-24
-        createTeam("Invictus Gaming", "iG");
-        createTeam("Team Toxic", "TT");
-        createTeam("Team Dignitas", "dig");
-        createTeam("Digital Chaos", "DC");
-
+        BufferedReader br = new BufferedReader(new FileReader("src/TeamNames.txt"));
+        String toName;
+        while( (toName = br.readLine()) != null) {
+            String tag = br.readLine();
+            createTeam(toName,tag);
+        }
         System.out.println(teams.size() + " teams initialized");
     }
 
     public static void initializeTournaments(){
         events = new ArrayList<>();
         tournamentMap = new HashMap<>();
-        createTournament("Season Open Invitational",200000, 2000,true);
+        createTournament("Xenon Grand Opening", 1000000,2000,true);
+        createTournament("Nvidia Early Days",100000,1000,false);
         createTournament("Season Open Minor",50000,500,false);
-        createTournament("Regional Tournament",35000,1000,false);
-        createTournament("Mid-Season Invitational",200000, 2000,true);
-        createTournament("Regional Tournament",35000,1000,false);
+        createTournament("PDL Boston",100000,1000,false);
+        createTournament("Winter Major",400000, 2000,true);
+        createTournament("Razer ProSeries Finals",100000,1000,false);
         createTournament("Mid-Season Minor",50000,500,false);
-        createTournament("Regional Tournament",35000,1000,false);
-        createTournament("Regional Tournament",35000,1000,false);
+        createTournament("Spring Major",400000, 2000,true);
+        createTournament("PerfectWorld Beijing",100000,1000,false);
+        createTournament("PDL Kyiv",100000,1000,false);
         createTournament("Season End Minor",50000,500,false);
-        createTournament("The International",1500000, 4000,true);
+        createTournament("The International",3000000, 4000,true);
 
     }
 
@@ -427,7 +416,7 @@ public class World {
         events.add(tmp);
         tournamentMap.put(s,tmp);
     }
-    public static void initializeFreeAgents(){
+    public static void initializeFreeAgents() throws IOException {
         freeAgents = new ArrayList<>();
         playerList = new ArrayList<>();
         //1-5
@@ -450,186 +439,13 @@ public class World {
         tmp = new Player("Mysterio",1500,22);
         playerList.add(tmp);
         freeAgents.add(tmp);
-        //6-10
-        createPlayer("SGod");
-        createPlayer("Iansanity");
-        createPlayer("xyz");
-        createPlayer("Trix");
-        createPlayer("mizeR");
-        //11-15
-        createPlayer("Tesi");
-        createPlayer("simz");
-        createPlayer("x5");
-        createPlayer("woi9");
-        createPlayer("candyy");
-        //16-20
-        createPlayer("dzst");
-        createPlayer("sync");
-        createPlayer("FleX");
-        createPlayer("twY");
-        createPlayer("siZZ");
-        //21-25
-        createPlayer("xts");
-        createPlayer("ClouD");
-        createPlayer("Stylez");
-        createPlayer("escroW");
-        createPlayer("woqs");
-        //26-30
-        createPlayer("DELETiON");
-        createPlayer("AzRes");
-        createPlayer("lights");
-        createPlayer("flowSTATE");
-        createPlayer("mux");
-        //31-35
-        createPlayer("blaST");
-        createPlayer("tranqs");
-        createPlayer("henry");
-        createPlayer("kR");
-        createPlayer("zipsY");
-        //36-40
-        createPlayer("space");
-        createPlayer("AXIS");
-        createPlayer("zitrus");
-        createPlayer("skies");
-        createPlayer("YunG_G0D");
-        //41-45
-        createPlayer("MasterminD");
-        createPlayer("dc-");
-        createPlayer("nylon");
-        createPlayer("taLismaN");
-        createPlayer("shoutout");
-        //46-50
-        createPlayer("mornE");
-        createPlayer("NatuRaL");
-        createPlayer("gHost");
-        createPlayer("KuZo");
-        createPlayer("dampur");
-        //51-55
-        createPlayer("task");
-        createPlayer("44atlas");
-        createPlayer("honoR");
-        createPlayer("glimpses");
-        createPlayer("pq");
-        //56-60
-        createPlayer("exc");
-        createPlayer("mesk");
-        createPlayer("emerald");
-        createPlayer("else");
-        createPlayer("Kcin");
-        //61-65
-        createPlayer("cory");
-        createPlayer("aVoS");
-        createPlayer("qrtrmstr");
-        createPlayer("bozza");
-        createPlayer("vic");
-        //66-70
-        createPlayer("MeowW");
-        createPlayer("patience");
-        createPlayer("tsper");
-        createPlayer("tsp");
-        createPlayer("cosmo");
-        //71-75
-        createPlayer("tootsie");
-        createPlayer("caverN");
-        createPlayer("SpaceMEX");
-        createPlayer("TransLatoR");
-        createPlayer("Spam");
-        //76-80
-        createPlayer("ChrisG");
-        createPlayer("placebo");
-        createPlayer("pauSe");
-        createPlayer("Smirrn");
-        createPlayer("curzos");
-        //81-85
-        createPlayer("SmolensK");
-        createPlayer("durs");
-        createPlayer("prl");
-        createPlayer("Z");
-        createPlayer("Sparrow");
-        //86-90
-        createPlayer("con");
-        createPlayer("smirk");
-        createPlayer("peezy");
-        createPlayer("more4");
-        createPlayer("zip");
-        //91-95
-        createPlayer("flipflop");
-        createPlayer("FireStorm");
-        createPlayer("woof");
-        createPlayer("planZ");
-        createPlayer("spankr");
-        //96-100
-        createPlayer("bossy");
-        createPlayer("metriculate");
-        createPlayer("op");
-        createPlayer("tr");
-        createPlayer("15");
-        //101-105
-        createPlayer("SmackerZ");
-        createPlayer("Study");
-        createPlayer("0mega");
-        createPlayer("smolladolla");
-        createPlayer("routines");
-        //106-110
-        createPlayer("dozer");
-        createPlayer("slowtoxic");
-        createPlayer("dreemz");
-        createPlayer("resQ");
-        createPlayer("@1");
-        //111-115
-        createPlayer("zone");
-        createPlayer("Ricky");
-        createPlayer("scoooba");
-        createPlayer("oez");
-        createPlayer("woah");
-        //116-120
-        createPlayer("brekfest");
-        createPlayer("plns");
-        createPlayer("oddity");
-        createPlayer("normal");
-        createPlayer("goose");
-        //121-125
-        createPlayer("dawning");
-        createPlayer("wreckeR");
-        createPlayer("HardCarryOnly");
-        createPlayer("benzboy");
-        createPlayer("VooDoo");
-        //126-130
-        c("sLaw");
-        c("chino");
-        c("Derby");
-        c("xMas");
-        c("TyLr");
-        //131-135
-        c("crossword");
-        c("ww");
-        c("9ie");
-        c("0pwoe");
-        c("sendit");
-        //136-140
-        c("domino");
-        c("steempunk");
-        c("graz");
-        c("andrej");
-        c("gooooo");
-        //141-145
-        c("DiVinE");
-        c("progamer");
-        c("UGP");
-        c("notsO");
-        c("fab");
-        //146-150
-        c("sanST");
-        c("canada");
-        c("duvet");
-        c("CloutChase");
-        c("beez");
-        //151-155
-        c("Ok2siCK");
-        c("MOth");
-        c("vicious");
-        c("spanner");
-        c("chaoz");
+
+        BufferedReader br = new BufferedReader(new FileReader("src/PlayerNames.txt"));
+        String toName;
+       while( (toName = br.readLine()) != null) {
+            createPlayer(toName);
+        }
+        System.out.println(playerList.size());
 
     }
 }

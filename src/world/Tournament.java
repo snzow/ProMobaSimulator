@@ -33,7 +33,7 @@ public class Tournament {
             teams = new ArrayList<Team>();
             if (pointsPool < 700){
                 t.sort(Comparator.comparing(Team::getPoints));
-                numTeams = 8;
+                numTeams = 16;
             }
             else{
                 Collections.shuffle(t);
@@ -59,6 +59,7 @@ public class Tournament {
             roundsToPlay++;
             numCheck *= 2;
         }
+
         //an array list of arraylists that will hold the competitors for the rounds
         ArrayList<ArrayList> rounds = new ArrayList<>();
         System.out.println(name);

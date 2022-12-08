@@ -36,6 +36,8 @@ public class Player {
 
     HashMap<Hero, Double> heroMap;
 
+    boolean playedProfessionally;
+
     public Player(String s, int sk, int a){
         name = s;
         skill = sk;
@@ -55,9 +57,10 @@ public class Player {
         avgD = 0;
         avgK = 0;
         avgNW = 0;
-        mmr = skill+5000;
+        mmr = skill+World.getRandomNumber(4950,5050);
         globalMmrRank = 0;
         lastYearGlobalMmrRank = 0;
+        playedProfessionally = false;
     }
 
     public Player(String s){
@@ -79,9 +82,10 @@ public class Player {
         avgD = 0;
         avgK = 0;
         avgNW = 0;
-        mmr = skill+5000;
+        mmr = skill+World.getRandomNumber(4950,5050);
         globalMmrRank = 0;
         lastYearGlobalMmrRank = 0;
+        playedProfessionally = false;
     }
 
     public Player(String s, int sk){
@@ -95,9 +99,10 @@ public class Player {
             double seed = World.getRandomNumber(7, 13) / 10.0;
             heroMap.put(h, seed);
         }
-        mmr = skill+5000;
+        mmr = skill+World.getRandomNumber(4950,5050);
         globalMmrRank = 0;
         lastYearGlobalMmrRank = 0;
+        playedProfessionally = false;
     }
 
     public int getGlobalMmrRank(){
@@ -155,6 +160,10 @@ public class Player {
         contract = new PlayerContract(sal,years,t);
     }
 
+    public boolean getProStatus(){
+        return playedProfessionally;
+    }
+
     public void setTeam(Team t){
         team = t;
     }
@@ -192,10 +201,14 @@ public class Player {
 
     public void yearEndStats(){
         earningsY = 0;
-        age++;
+        if(prevTeam != World.FREE_AGENT){
+            age++;
+        }
         if(contract != null){
             contract.tickYear();
+            playedProfessionally = true;
         }
+        netPerformance = netPerformance /4;
         yearsWithTeam++;
         history.add(new yearResults());
     }

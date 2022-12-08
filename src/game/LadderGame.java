@@ -23,8 +23,17 @@ public class LadderGame {
         ArrayList<Player> matchmakingPoolNoTeam = World.getFreeAgents();
         matchmakingPool.sort(Comparator.comparing(Player::getMmr,Comparator.reverseOrder()));
         int seed = World.getRandomNumber(0,matchmakingPool.size()-10);
-        int numProsRadiant = World.getRandomNumber(1,5);
-        int numProsDire = World.getRandomNumber(1,5);
+        int numProsRadiant = 0;
+        int numProsDire = 0;
+        if(s == "pro"){
+
+            numProsRadiant = 5;
+            numProsDire = 5;
+        }
+        else if(s != "fa"){
+            numProsRadiant = World.getRandomNumber(1, 5);
+            numProsDire = World.getRandomNumber(1, 5);
+        }
         for(int i = 0; i < numProsRadiant; i++){
             radiant.add(matchmakingPool.remove(seed));
         }
@@ -33,12 +42,11 @@ public class LadderGame {
         }
         Team radiantTeam = World.RADIANT;
         Team direTeam = World.DIRE;
+        seed = World.getRandomNumber(0,matchmakingPoolNoTeam.size()-10);
         while(dire.size() < 5){
-            seed = World.getRandomNumber(0,matchmakingPoolNoTeam.size()-1);
             dire.add(matchmakingPoolNoTeam.remove(seed));
         }
         while(radiant.size() < 5){
-            seed = World.getRandomNumber(0,matchmakingPoolNoTeam.size()-1);
             radiant.add(matchmakingPoolNoTeam.remove(seed));
         }
 
@@ -47,6 +55,8 @@ public class LadderGame {
         Game nextGame = new Game(radiantTeam,direTeam);
         nextGame.playGame(radiantTeam,direTeam,s);
     }
+
+
 
 
 }
