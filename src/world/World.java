@@ -13,6 +13,7 @@ import static java.util.Comparator.*;
 
 public class World {
 
+    static ArrayList<Sponsor> sponsors;
     static Map<String,Player> playerMap;
     static ArrayList<Player> playerList;
     static ArrayList<Player> freeAgents;
@@ -75,14 +76,18 @@ public class World {
                 events.get(seasonProg).runTournament(teams);
                 seasonProg++;
                 playerList.sort(Comparator.comparing(Player::getMmr,reverseOrder()));
-                for(int i = 0; i < 10; i++){
+                matchmakingPool.sort(Comparator.comparing(Player::getMmr,Comparator.reverseOrder()));
+                for(int i = 0; i < 5; i++){
                     while (matchmakingPool.size() >= 10){
-                        ladderGame.playGame("x",1);
+                        ladderGame.playGame("x",0);
+                    }
+                    matchmakingPool = (ArrayList<Player>) playerList.clone();
+                    World.matchmakingPool.sort(Comparator.comparing(Player::getMmr));
+                    while(matchmakingPool.size() >= 10){
+                        ladderGame.playGame("x",0);
                     }
                     matchmakingPool = (ArrayList<Player>) playerList.clone();
                 }
-
-
             }
             else if (inp == 2){
                 showStandingsAwards(false);
@@ -206,7 +211,7 @@ public class World {
         }
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for(Team t : teams){
-            if(teams.indexOf(t) <= 10){
+            if(teams.indexOf(t) <= 5){
                 t.printFA();
                 t.printRoster();
             }
@@ -215,6 +220,7 @@ public class World {
         for(Player p : freeAgents){
             p.setPrevTeam(FREE_AGENT);
         }
+        System.out.println("------------------");
         System.out.println("---Rookies For Coming Season---");
         for(Player p : signed){
             if(!firstTime){
@@ -222,6 +228,11 @@ public class World {
                     System.out.println(p.getName() + " -> " + p.getTeam().getTag() + " | MMR: " + p.getMmr());
                 }
             }
+        }
+        for(Team t : teams){
+            System.out.println("------------------");
+            System.out.println(t.name);
+            t.printRosterShort();
         }
     }
 
@@ -342,9 +353,9 @@ public class World {
     public static void initializeTournaments(){
         events = new ArrayList<>();
         tournamentMap = new HashMap<>();
+        createTournament("Season Open Minor",50000,500,false);
         createTournament("Xenon Grand Opening", 1000000,2000,true);
         createTournament("Nvidia Early Days",100000,1000,false);
-        createTournament("Season Open Minor",50000,500,false);
         createTournament("PDL Boston",100000,1000,false);
         createTournament("Winter Major",400000, 2000,true);
         createTournament("Razer ProSeries Finals",100000,1000,false);
@@ -428,7 +439,7 @@ public class World {
         playerList = new ArrayList<>();
         //1-5
         Player tmp = new Player("AodhaN",1500,22);
-        playerMap.put("Aodhan",tmp);
+        playerMap.put("AodhaN",tmp);
         freeAgents.add(tmp);
         playerList.add(tmp);
         tmp =  new Player("Fiyah",1500,22);

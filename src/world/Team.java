@@ -1,6 +1,5 @@
 package world;
 
-import java.sql.Array;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -8,7 +7,7 @@ public class Team {
 
     ArrayList<Player> players;
     ArrayList<TeamSeasonRecord> history;
-    Organization sponsor;
+    Sponsor sponsor;
     String name;
 
     String tag;
@@ -78,6 +77,10 @@ public class Team {
         }
     }
 
+    public Sponsor getSponsor(){
+        return sponsor;
+    }
+
     public Player dropPlayer(Player p){
         p.cut();
         addDropped(p);
@@ -90,7 +93,7 @@ public class Team {
     public int getRunningPerf(){
         return runningPerf;
     }
-    public void signSponsor(Organization s){
+    public void signSponsor(Sponsor s){
         sponsor = s;
         System.out.println(name + " have been picked up by " + sponsor.toString());
         name = sponsor.toString();
@@ -128,7 +131,7 @@ public class Team {
 
                 }
                 else{
-                    if(p.getContractYearsRemaining() == 0){
+                    if(p.getContractYearsRemaining() <= 0){
                         if (moddedPerf > 10){
                             p.extendContract(1.5 ,3);
                         }
@@ -182,6 +185,7 @@ public class Team {
         winsY = 0;
         lossesY = 0;
         prizeMoneyY = 0;
+
     }
 
     public void incrementWins(){
@@ -288,6 +292,28 @@ public class Team {
         return z + name + z;
     }
 
+    public void printRosterShort(){
+        for (Player p : getRoster()){
+            if(getRoster().indexOf(p) < 4){
+                if(p.getYearsWithTeam() == 0){
+                    System.out.print(p.getName() + "(!) - ");
+                }
+                else{
+                    System.out.print(p.getName() + " - ");
+                }
+            }
+            else{
+                if(p.getYearsWithTeam() == 0){
+                    System.out.println(p.getName() + "(!)");
+                }
+                else{
+                    System.out.println(p.getName());
+                }
+            }
+        }
+        //System.out.println();
+    }
+
     public void printHistory(){
         int year = 0;
         System.out.println("---" + name + "---");
@@ -299,6 +325,10 @@ public class Team {
                 System.out.println("-----------");
             }
             year++;
+        }
+        System.out.println("Current Roster");
+        for (Player p : getRoster()){
+            System.out.println(p.getName());
         }
         System.out.println("-----------");
     }
@@ -361,6 +391,8 @@ public class Team {
             }
             //System.out.println();
         }
+
+
 
         public String toString(){
             NumberFormat formatter = NumberFormat.getCurrencyInstance();

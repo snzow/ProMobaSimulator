@@ -4,6 +4,7 @@ import game.Hero;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class Player {
@@ -40,6 +41,8 @@ public class Player {
 
     int pubGamesY;
 
+    boolean playedPubsThisYear;
+
     public Player(String s, int sk, int a){
         name = s;
         skill = sk;
@@ -64,6 +67,7 @@ public class Player {
         lastYearGlobalMmrRank = 0;
         playedProfessionally = false;
         pubGamesY = 0;
+        playedPubsThisYear = false;
     }
 
     public Player(String s){
@@ -90,6 +94,7 @@ public class Player {
         lastYearGlobalMmrRank = 0;
         playedProfessionally = false;
         pubGamesY = 0;
+        playedPubsThisYear = false;
     }
 
     public Player(String s, int sk){
@@ -108,9 +113,12 @@ public class Player {
         lastYearGlobalMmrRank = 0;
         playedProfessionally = false;
         pubGamesY = 0;
+        playedPubsThisYear = false;
     }
 
     public int getGlobalMmrRank(){
+        World.getPlayerList().sort(Comparator.comparing(Player::getMmr,Comparator.reverseOrder()));
+        globalMmrRank = World.getPlayerList().indexOf(this) + 1;
         return globalMmrRank;
     }
     public void setGlobalMmrRank(int newRank){
@@ -194,6 +202,10 @@ public class Player {
 
     public void updateMmr(int change){
         mmr += change;
+        if (mmr <= 4000){
+            mmr = 4000;
+        }
+        this.incrementPubGamesY();
     }
 
     public int getMmr(){
@@ -241,6 +253,11 @@ public class Player {
     }
 
     public void extendContract(double s, int y){
+        if(this.getMmr() >= 7250 && (this.getSalary() + this.getTeam().getBalance()/15) * s < this.getMmr()*10){
+            System.out.println(this.name + " has declined a contract extension with " + getTeam());
+            this.leaveTeam();
+            return;
+        }
         contract.extendContract(s,y);
         team.addExtension(this);
     }
@@ -253,6 +270,17 @@ public class Player {
         for(int i = 0; i < getContractYearsRemaining(); i++){
             payPlayer(getSalary()/5);
         }
+        team.players.remove(this);
+        prevTeam = team;
+        team = World.FREE_AGENT;
+        contract = null;
+        netPerformance = 0;
+        World.freeAgents.add(this);
+        yearsWithTeam = 0;
+    }
+
+    public void leaveTeam(){
+        team.addDropped(this);
         team.players.remove(this);
         prevTeam = team;
         team = World.FREE_AGENT;
@@ -288,7 +316,7 @@ public class Player {
             tiWon += r.ti;
         }
         System.out.println("------------");
-        System.out.println(name + " | " + team + " | " + tourneysWon + "(" + majorsWon + ") | " + formatter.format(totalEarnings) + " | " + tiWon + " TI's Won");
+        System.out.println(name + " | " + team + " | (Rank " +  getGlobalMmrRank() + ") " + getMmr() + " | (" + majorsWon + ") | " + formatter.format(totalEarnings) + " | " + tiWon + " TI's Won");
 
         System.out.println("------------");
     }
@@ -299,7 +327,7 @@ public class Player {
         if (team.toString().equals("Free Agent")){
             return name;
         }
-        return (team.getTag() + "." + name);
+        return (team.getTag() + "." + name + "." + team.getSponsor());
     }
 
     public HashMap<Hero,Double> getHeroMap(){
@@ -320,7 +348,8 @@ public class Player {
         int majorsWon;
         int ti;
         double salary;
-        int pubGames;
+
+        int mmrRank;
 
         public yearResults(){
             team = getTeam();
@@ -329,7 +358,7 @@ public class Player {
             majorsWon = team.getMajorsWon(0);
             ti = team.getTiWon(0);
             salary = getSalary();
-            pubGames = getPubGamesY();
+            mmrRank = getGlobalMmrRank();
         }
 
         public String toString(){
@@ -338,7 +367,7 @@ public class Player {
             if (ti == 1){
                 z = " TI Winner";
             }
-            return (name + " | " + this.team + " | " + this.mmrY + " | " + this.tourneysWon + "(" + this.majorsWon + ") | " + formatter.format(this.salary) + " | " + z + " | " + pubGames);
+            return (name + " | " + this.team + " | (Rank " + this.mmrRank +") " + this.mmrY + " | " + this.tourneysWon + "(" + this.majorsWon + ") | " + formatter.format(this.salary) + " | " + z);
         }
     }
 }

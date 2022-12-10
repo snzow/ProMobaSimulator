@@ -67,22 +67,20 @@ public class LadderGame {
     }
 
     public void playGame(String s,int x){
-        World.matchmakingPool.sort(Comparator.comparing(Player::getMmr,Comparator.reverseOrder()));
-        int seed = World.getRandomNumber(0,World.matchmakingPool.size()-10);
         Team radiantTeam = World.RADIANT;
         Team direTeam = World.DIRE;
         for(int i = 0; i < 5; i++){
-            Player tmp = World.matchmakingPool.remove(seed);
-            tmp.incrementPubGamesY();
+            Player tmp = World.matchmakingPool.remove(x);
             radiant.add(tmp);
-            tmp = World.matchmakingPool.remove(seed);
-            tmp.incrementPubGamesY();
+            tmp = World.matchmakingPool.remove(x);
             dire.add(tmp);
         }
         radiantTeam.setRoster(radiant);
         direTeam.setRoster(dire);
         Game nextGame = new Game(radiantTeam,direTeam);
         nextGame.playGame(radiantTeam,direTeam,s);
+        dire.clear();
+        radiant.clear();
     }
 
 }

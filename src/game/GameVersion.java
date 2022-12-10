@@ -14,8 +14,8 @@ public class GameVersion {
     }
 
     public void incrementGameVersion(){
-        version1s++;
-        if (version1s == 10){
+        version1s += 4;
+        if (version1s >= 10){
             version10s++;
             version1s = 0;
         }

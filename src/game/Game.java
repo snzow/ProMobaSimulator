@@ -136,7 +136,7 @@ public class Game {
                 if (rad.noTowers()) {
                     seed = World.getRandomNumber(25,35);
                     for(int i = 0; i < 5; i++){
-                        radiantArrayList.get(i).updateMmr(-(seed));
+                        radiantArrayList.get(i).updateMmr(-1 * (seed));
                         direArrayList.get(i).updateMmr(seed);
                     }
                     if(s == "print"){
@@ -148,7 +148,7 @@ public class Game {
                     seed = World.getRandomNumber(25,35);
                     for(int i = 0; i < 5; i++){
                         radiantArrayList.get(i).updateMmr(seed);
-                        direArrayList.get(i).updateMmr(-(seed));
+                        direArrayList.get(i).updateMmr(-1*(seed));
                     }
                     if(s == "print"){
                         printResults(dir,rad,"s",(int)gameAvgMmr);

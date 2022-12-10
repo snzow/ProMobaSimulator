@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.07 players and teams in txt files for easy access and importing. start of work on league feature">
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.075 improvements to the matchmaking, begin to fix bug with mmr in history">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TeamNames.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/TeamNames.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/GameVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/GameVersion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game/LadderGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/LadderGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/Organization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Sponsor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/world/PlayerContract.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/PlayerContract.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
@@ -89,7 +90,12 @@
       <workItem from="1670112331993" duration="7410000" />
       <workItem from="1670136308029" duration="2995000" />
       <workItem from="1670395499814" duration="3956000" />
-      <workItem from="1670454463276" duration="12496000" />
+      <workItem from="1670454463276" duration="12719000" />
+      <workItem from="1670543055023" duration="583000" />
+      <workItem from="1670548089144" duration="3235000" />
+      <workItem from="1670627217588" duration="8345000" />
+      <workItem from="1670659292066" duration="328000" />
+      <workItem from="1670702133248" duration="3929000" />
     </task>
     <task id="LOCAL-00001" summary="insane">
       <created>1668430584469</created>
@@ -182,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670491414623</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="v0.075 improvements to the matchmaking, begin to fix bug with mmr in history">
+      <created>1670495870111</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1670495870111</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -213,7 +226,8 @@
     <MESSAGE value="v0.05 Matchmaking games on a ranked ladder" />
     <MESSAGE value="v0.05 more mmr changes and stuff" />
     <MESSAGE value="v0.07 players and teams in txt files for easy access and importing. start of work on league feature" />
-    <option name="LAST_COMMIT_MESSAGE" value="v0.07 players and teams in txt files for easy access and importing. start of work on league feature" />
+    <MESSAGE value="v0.075 improvements to the matchmaking, begin to fix bug with mmr in history" />
+    <option name="LAST_COMMIT_MESSAGE" value="v0.075 improvements to the matchmaking, begin to fix bug with mmr in history" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
