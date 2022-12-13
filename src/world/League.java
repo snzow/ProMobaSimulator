@@ -1,41 +1,99 @@
 package world;
 
+import game.Game;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class League {
-    ArrayList<LeagueTeam> teams;
+    ArrayList<LeagueTeam> teamList;
     ArrayList<League.LeagueResults> pastResults;
     String name;
     double prizePool;
     double pointsPool;
     boolean major;
 
+    int week;
+
+    HashMap<Team,LeagueTeam> teamMap;
+
+    ArrayList<LeagueTeam> homeTeams;
+
+    ArrayList<LeagueTeam> awayTeams;
+
     HashMap<Team,Integer> gamesPlayed;
+
 
     public League(String name, double prizePool, double pointsPool, boolean major) {
         this.name = name;
         this.prizePool = prizePool;
         this.pointsPool = pointsPool;
         this.major = major;
+        week = 1;
         gamesPlayed = new HashMap<>();
         pastResults = new ArrayList<LeagueResults>();
+        teamList = new ArrayList<>();
+        awayTeams = new ArrayList<>();
+        homeTeams = new ArrayList<>();
+        teamMap = new HashMap<>();
     }
 
+    public void startSeason(){
+        for(int i = 0; i < 16; i++){
+            if (i < 8){
+                homeTeams.add(teamList.get(i));
+            }
+            else{
+                awayTeams.add(teamList.get(i));
+            }
+        }
+    }
     public void addTeam(Team team){
-        teams.add(new LeagueTeam(team));
+        LeagueTeam tmp = new LeagueTeam(team);
+        teamList.add(tmp);
+        teamMap.put(team,tmp);
     }
 
     public void playWeek(){
-        for(LeagueTeam team : teams){
-            if(!team.playedThisWeek){
-
+        if(week == 1){
+            startSeason();
+        }
+        if(week < 25) {
+            for (int i = 0; i < 8; i++) {
+                Team homeTeam = homeTeams.get(i).getTeam();
+                Team awayTeam = awayTeams.get(i).getTeam();
+                homeTeam.receivePrizeMoney(prizePool);
+                awayTeam.receivePrizeMoney(prizePool);
+                Game tmp = new Game(homeTeam, awayTeam);
+                Team winner = tmp.playSeries(3);
+                if (winner.equals(homeTeam)) {
+                    teamMap.get(homeTeam).seriesWins++;
+                    teamMap.get(awayTeam).seriesLosses++;
+                } else {
+                    teamMap.get(awayTeam).seriesWins++;
+                    teamMap.get(homeTeam).seriesLosses++;
+                }
             }
+            printStandings();
+            awayTeams.add(homeTeams.remove(homeTeams.size() - 1));
+            homeTeams.add(0, awayTeams.remove(0));
+            week++;
+        }
+        else{
+            week = 1;
         }
     }
 
     public ArrayList<League.LeagueResults> getPastResults() {
         return pastResults;
+    }
+
+    public void printStandings(){
+        teamList.sort(Comparator.comparing(LeagueTeam::getSeriesWins,Comparator.reverseOrder()));
+        for(LeagueTeam t : teamList){
+            System.out.println((teamList.indexOf(t) + 1) + ". " + t.getTeam().toString() + " - " + t.getSeriesWins() + "-" + t.getSeriesLosses());
+        }
     }
 
     public void setPastResults(ArrayList<League.LeagueResults> pastResults) {

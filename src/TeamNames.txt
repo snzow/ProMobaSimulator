@@ -60,3 +60,5 @@ Rogue
 RGE
 Team LDLC
 LDLC
+Natus Vincere
+Na'Vi

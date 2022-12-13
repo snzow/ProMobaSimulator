@@ -36,9 +36,14 @@ public class World {
 
     public static ArrayList<Player> matchmakingPool;
 
+    public static int year;
+
+    public static ArrayList<League> leagueList;
+
 
     public static void main(String[] args) throws IOException {
         playerMap = new HashMap<>();
+        year = 1;
         initializeHeroes();
         initializeFreeAgents();
         initializeTeams();
@@ -64,14 +69,23 @@ public class World {
             if (inp == 1) {
                 if (seasonProg == events.size()){
                     seasonProg = 0;
+                    year++;
                     runFreeAgency(false);
                     patchThisYear= false;
+                    if(year == 2){
+                        leagueSetup();
+                    }
                     continue;
                 }
                 if(seasonProg == events.size()/2 && !patchThisYear){
                     patchHeroes();
                     patchThisYear = true;
                     continue;
+                }
+                if(leagueList != null){
+                    for(League l : leagueList){
+                        l.playWeek();
+                    }
                 }
                 events.get(seasonProg).runTournament(teams);
                 seasonProg++;
@@ -129,7 +143,7 @@ public class World {
                 }
             }
             else if (inp == 6){
-                ladderGame.playGame("print");
+                ladderGame.playGame("s" , World.getRandomNumber(0,matchmakingPool.size() - 10));
             }
         }
 
@@ -450,11 +464,15 @@ public class World {
         playerMap.put("Malco85",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
-        tmp = new Player("charfra",1500,22);
+        tmp = new Player("charfra",1500,23);
         playerMap.put("charfra",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
         tmp = new Player("Mysterio",1500,22);
+        playerList.add(tmp);
+        freeAgents.add(tmp);
+        tmp =  new Player("chousto",1700,24);
+        playerMap.put("chousto",tmp);
         playerList.add(tmp);
         freeAgents.add(tmp);
 
@@ -465,5 +483,22 @@ public class World {
         }
         System.out.println(playerList.size());
 
+    }
+
+    public static void leagueSetup(){
+        leagueList = new ArrayList<>();
+        League majorLeague = new League("Major League Xenon",200000,2000,true);
+        League minorLeague = new League("Minor League Xenon",25000,500,false);
+        teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
+        for(Team t : teams){
+            if(teams.indexOf(t) < 16){
+                majorLeague.addTeam(t);
+            }
+            else if(teams.indexOf(t) < 32){
+                minorLeague.addTeam(t);
+            }
+        }
+        leagueList.add(majorLeague);
+        leagueList.add(minorLeague);
     }
 }

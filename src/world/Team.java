@@ -57,7 +57,7 @@ public class Team {
         addSigning(p);
         p.yearsWithTeam = 0;
         players.add(p);
-        p.signContract(this, Math.min((int) (balance/9),500000),1);
+        p.signContract(this, Math.min((int) (balance/9),300000),1);
 
     }
 

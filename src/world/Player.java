@@ -327,7 +327,7 @@ public class Player {
         if (team.toString().equals("Free Agent")){
             return name;
         }
-        return (team.getTag() + "." + name + "." + team.getSponsor());
+        return (team.getTag() + "." + name);
     }
 
     public HashMap<Hero,Double> getHeroMap(){
