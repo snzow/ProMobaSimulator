@@ -12,6 +12,8 @@ public class Team {
 
     String tag;
 
+    League league;
+
     FreeAgencyInstance freeAgency;
     double balance;
     double prizeMoneyY;
@@ -57,8 +59,16 @@ public class Team {
         addSigning(p);
         p.yearsWithTeam = 0;
         players.add(p);
-        p.signContract(this, Math.min((int) (balance/9),300000),1);
+        p.signContract(this, Math.min((int) (balance/9),500000),1);
 
+    }
+
+    public void setLeague(League league){
+        this.league = league;
+    }
+
+    public League getLeague(){
+        return this.league;
     }
 
     public double getContractOffer(){
@@ -369,6 +379,8 @@ public class Team {
         ArrayList<Player> roster;
         int worldRanking;
 
+        League league;
+
         public TeamSeasonRecord(int w, int l, double pw){
             wins = w;
             losses = l;
@@ -378,6 +390,9 @@ public class Team {
             prizeWinnings = pw;
             roster = getRoster();
             worldRanking = getWorldRanking();
+            league = getLeague();
+
+
         }
 
         public void printRoster(){
@@ -396,7 +411,11 @@ public class Team {
 
         public String toString(){
             NumberFormat formatter = NumberFormat.getCurrencyInstance();
-            return "Rank " + worldRanking + " | " + tourneyWins + "(" + majorWins + ") | " + wins + "-" +
+            String toPrint = " | No League | ";
+            if(league != null){
+                toPrint = " | " + league + " | ";
+            }
+            return "Rank " + worldRanking + toPrint + wins + "-" +
                     losses + " | " + formatter.format(prizeWinnings);
         }
     }

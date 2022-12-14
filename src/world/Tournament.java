@@ -29,11 +29,16 @@ public class Tournament {
         pastResults.add(thisTourney);
         boolean ti = false;
         if(!major){
-            int numTeams = 16;
+            int numTeams;
+            if(t.size() > 8){
+                numTeams = 16;
+            }
+            else{
+                numTeams = 8;
+            }
             teams = new ArrayList<Team>();
             if (pointsPool < 700){
                 t.sort(Comparator.comparing(Team::getPoints));
-                numTeams = 16;
             }
             else{
                 Collections.shuffle(t);
@@ -142,6 +147,16 @@ public class Tournament {
             System.out.println("year " + year + ": " + t.toString());
             year++;
         }
+    }
+
+    public ArrayList<Team> getLastTopFour(){
+        TournamentResult toParse = pastResults.get(pastResults.size()- 1);
+         ArrayList<Team> topFour = new ArrayList<>();
+         topFour.add(toParse.winner);
+         topFour.add(toParse.second);
+         topFour.add(toParse.thirdFourthOne);
+         topFour.add(toParse.thirdFourthTwo);
+         return topFour;
     }
 
     private class TournamentResult{

@@ -17,6 +17,8 @@ public class World {
     static Map<String,Player> playerMap;
     static ArrayList<Player> playerList;
     static ArrayList<Player> freeAgents;
+
+    static ArrayList<Team> teamsNoLeague;
     static ArrayList<Team> teams;
 
     static Map<String, Team> teamMap;
@@ -40,6 +42,8 @@ public class World {
 
     public static ArrayList<League> leagueList;
 
+    public static Tournament proRelTournament;
+
 
     public static void main(String[] args) throws IOException {
         playerMap = new HashMap<>();
@@ -52,7 +56,8 @@ public class World {
         patch = new GameVersion();
         Scanner kb = new Scanner(System.in);
         runFreeAgency(true);
-        int seasonProg = 0;
+        int seasonProgress = 0;
+        int eventsProgress = 0;
         boolean patchThisYear = false;
         while(true) {
             System.out.println("----------");
@@ -67,8 +72,8 @@ public class World {
             int inp = kb.nextInt();
             LadderGame ladderGame = new LadderGame();
             if (inp == 1) {
-                if (seasonProg == events.size()){
-                    seasonProg = 0;
+                if (seasonProgress == 25|| (year == 1 && seasonProgress == events.size())){
+                    seasonProgress = 0;
                     year++;
                     runFreeAgency(false);
                     patchThisYear= false;
@@ -77,18 +82,47 @@ public class World {
                     }
                     continue;
                 }
-                if(seasonProg == events.size()/2 && !patchThisYear){
+                if(seasonProgress == events.size()/2 && !patchThisYear){
                     patchHeroes();
                     patchThisYear = true;
                     continue;
                 }
-                if(leagueList != null){
-                    for(League l : leagueList){
-                        l.playWeek();
+                if(seasonProgress == 24){
+                    events.get(0).runTournament(leagueList.get(0).getTeams());
+                }
+                else {
+                    if(leagueList != null){
+                        for(League l : leagueList){
+                            l.playWeek();
+                        }
+                        if(leagueList.get(0).week == 25){
+                            ArrayList<Team> proRelTournamentList = new ArrayList<>();
+                            ArrayList<Team> majorLeagueRel = leagueList.get(0).getRelegationCandidates();
+                            ArrayList<Team> minorLeaguePro = leagueList.get(1).getPromotionCandidates();
+                            for(int i = 0; i < 4; i++){
+                                proRelTournamentList.add(majorLeagueRel.remove(0));
+                                proRelTournamentList.add(minorLeaguePro.remove(0));
+                            }
+                            proRelTournament.runTournament(proRelTournamentList);
+                            ArrayList<Team> promoted = proRelTournament.getLastTopFour();
+                            for(int i = 0; i < 8; i++){
+                                Team t = proRelTournamentList.get(0);
+                                if (promoted.contains(t)){
+                                    leagueList.get(0).addTeam(t);
+                                    proRelTournamentList.remove(t);
+                                }
+                                else{
+                                    leagueList.get(1).addTeam(t);
+                                    proRelTournamentList.remove(t);
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        events.get(0).runTournament(teams);
                     }
                 }
-                events.get(seasonProg).runTournament(teams);
-                seasonProg++;
+                seasonProgress++;
                 playerList.sort(Comparator.comparing(Player::getMmr,reverseOrder()));
                 matchmakingPool.sort(Comparator.comparing(Player::getMmr,Comparator.reverseOrder()));
                 for(int i = 0; i < 5; i++){
@@ -367,17 +401,15 @@ public class World {
     public static void initializeTournaments(){
         events = new ArrayList<>();
         tournamentMap = new HashMap<>();
-        createTournament("Season Open Minor",50000,500,false);
-        createTournament("Xenon Grand Opening", 1000000,2000,true);
-        createTournament("Nvidia Early Days",100000,1000,false);
-        createTournament("PDL Boston",100000,1000,false);
-        createTournament("Winter Major",400000, 2000,true);
-        createTournament("Razer ProSeries Finals",100000,1000,false);
-        createTournament("Mid-Season Minor",50000,500,false);
-        createTournament("Spring Major",400000, 2000,true);
-        createTournament("PerfectWorld Beijing",100000,1000,false);
-        createTournament("PDL Kyiv",100000,1000,false);
-        createTournament("Season End Minor",50000,500,false);
+        //createTournament("Season Open Minor",50000,500,false);
+        //createTournament("Fall Major", 500000,2000,true);
+        //createTournament("Nvidia Early Days",100000,1000,false);
+        //createTournament("PDL Boston",100000,1000,false);
+       //createTournament("Winter Minor",50000,500,false);
+        //createTournament("Spring Major",500000, 2000,true);
+        //createTournament("Razer ProSeries Finals",100000,1000,false);
+       // createTournament("PerfectWorld Beijing",100000,1000,false);
+       // createTournament("PDL Kyiv",100000,1000,false);
         createTournament("The International",3000000, 4000,true);
 
     }
@@ -487,7 +519,8 @@ public class World {
 
     public static void leagueSetup(){
         leagueList = new ArrayList<>();
-        League majorLeague = new League("Major League Xenon",200000,2000,true);
+        teamsNoLeague = new ArrayList<>();
+        League majorLeague = new League("Major League Xenon",100000,2000,true);
         League minorLeague = new League("Minor League Xenon",25000,500,false);
         teams.sort(Comparator.comparing(Team::getPoints,reverseOrder()));
         for(Team t : teams){
@@ -497,8 +530,13 @@ public class World {
             else if(teams.indexOf(t) < 32){
                 minorLeague.addTeam(t);
             }
+            else{
+                teamsNoLeague.add(t);
+            }
         }
         leagueList.add(majorLeague);
         leagueList.add(minorLeague);
+        proRelTournament = new Tournament("Promotion Relegation Tournament",0,0,false);
+
     }
 }

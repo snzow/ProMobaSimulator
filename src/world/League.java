@@ -16,6 +16,8 @@ public class League {
 
     int week;
 
+    LeagueTeam defendingChamp;
+
     HashMap<Team,LeagueTeam> teamMap;
 
     ArrayList<LeagueTeam> homeTeams;
@@ -23,6 +25,8 @@ public class League {
     ArrayList<LeagueTeam> awayTeams;
 
     HashMap<Team,Integer> gamesPlayed;
+
+
 
 
     public League(String name, double prizePool, double pointsPool, boolean major) {
@@ -40,7 +44,10 @@ public class League {
     }
 
     public void startSeason(){
+        homeTeams = new ArrayList<>();
+        awayTeams = new ArrayList<>();
         for(int i = 0; i < 16; i++){
+            teamList.get(i).getTeam().setLeague(this);
             if (i < 8){
                 homeTeams.add(teamList.get(i));
             }
@@ -48,6 +55,30 @@ public class League {
                 awayTeams.add(teamList.get(i));
             }
         }
+    }
+
+    public LeagueTeam getDefendingChamp(){
+        if(defendingChamp == null){
+            return null;
+        }
+        else{
+            return defendingChamp;
+        }
+    }
+
+    public ArrayList<Team> getTeams(){
+        ArrayList<Team> toReturn = new ArrayList<>();
+        for (LeagueTeam t : teamList){
+            toReturn.add(t.getTeam());
+        }
+        return toReturn;
+    }
+
+    public boolean isDefendingChamp(LeagueTeam team){
+        if(defendingChamp == team){
+            return true;
+        }
+        return false;
     }
     public void addTeam(Team team){
         LeagueTeam tmp = new LeagueTeam(team);
@@ -80,9 +111,49 @@ public class League {
             homeTeams.add(0, awayTeams.remove(0));
             week++;
         }
-        else{
-            week = 1;
+    }
+
+    public ArrayList<Team> getRelegationCandidates(){
+        teamList.sort(Comparator.comparing(LeagueTeam::getSeriesWins));
+        ArrayList<Team> toReturn = new ArrayList<>();
+        ArrayList<LeagueTeam> toResults = (ArrayList<LeagueTeam>) toReturn.clone();
+        toResults.sort(Comparator.comparing(LeagueTeam::getSeriesWins,Comparator.reverseOrder()));
+        LeagueResults thisYear = new LeagueResults(toResults);
+        pastResults.add(thisYear);
+        for(LeagueTeam t : teamList){
+            t.setSeriesLosses(0);
+            t.setSeriesWins(0);
+            t.getTeam().updatePoints(this.pointsPool/toResults.indexOf(t) + 1);
+            if(teamList.indexOf(t) == 15){
+                this.defendingChamp = t;
+            }
         }
+        for (int i = 0; i < 4; i ++) {
+            toReturn.add(teamList.remove(i).getTeam());
+        }
+        week = 1;
+        return toReturn;
+    }
+
+    public ArrayList<Team> getPromotionCandidates(){
+        teamList.sort(Comparator.comparing(LeagueTeam::getSeriesWins,Comparator.reverseOrder()));
+        ArrayList<Team> toReturn = new ArrayList<>();
+        ArrayList<LeagueTeam> toResults = (ArrayList<LeagueTeam>) toReturn.clone();
+        LeagueResults thisYear = new LeagueResults(toResults);
+        pastResults.add(thisYear);
+        for(LeagueTeam t : teamList){
+            t.setSeriesLosses(0);
+            t.setSeriesWins(0);
+            t.getTeam().updatePoints(this.pointsPool/teamList.indexOf(t) + 1);
+            if(teamList.indexOf(t) == 0){
+                this.defendingChamp = t;
+            }
+        }
+        for (int i = 0; i < 4; i ++){
+            toReturn.add(teamList.remove(i).getTeam());
+        }
+        week = 1;
+        return toReturn;
     }
 
     public ArrayList<League.LeagueResults> getPastResults() {
@@ -91,9 +162,12 @@ public class League {
 
     public void printStandings(){
         teamList.sort(Comparator.comparing(LeagueTeam::getSeriesWins,Comparator.reverseOrder()));
+        System.out.println("---------------");
+        System.out.println(name + " Standings after week " + week);
         for(LeagueTeam t : teamList){
-            System.out.println((teamList.indexOf(t) + 1) + ". " + t.getTeam().toString() + " - " + t.getSeriesWins() + "-" + t.getSeriesLosses());
+            System.out.println((teamList.indexOf(t) + 1) + ". " + t.toString() + " - " + t.getSeriesWins() + "-" + t.getSeriesLosses());
         }
+        System.out.println("---------------");
     }
 
     public void setPastResults(ArrayList<League.LeagueResults> pastResults) {
@@ -172,15 +246,25 @@ public class League {
         public void setGameLosses(int gameLosses) {
             this.gameLosses = gameLosses;
         }
+
+        public String toString(){
+            String mod = "";
+            if(isDefendingChamp(this) == true){
+                mod = "*";
+            }
+            return mod + this.getTeam().name + mod;
+        }
     }
     private class LeagueResults{
         Team[] standings;
+        int year;
 
         public LeagueResults(ArrayList<LeagueTeam> result){
             this.standings = new Team[16];
             for (LeagueTeam team : result){
                 standings[result.indexOf(team)] = team.getTeam();
             }
+            year = World.year;
         }
 
     }
