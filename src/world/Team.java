@@ -164,7 +164,7 @@ public class Team {
             }
         }
         if(broke == true){
-            balance = 50000; //50,000
+            balance = 200_000;
         }
         runningPerf = 0;
     }
@@ -478,7 +478,7 @@ public class Team {
             }
             for (Player p : extensions) {
                 System.out.println(p.getName() + " - " +
-                        formatter.format(p.getSalary()) + "/" + p.getContractYearsRemaining());
+                        formatter.format(p.getSalary()) + "/" + (p.getContractYearsRemaining() + 1));
             }
 
         }

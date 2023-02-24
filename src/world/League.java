@@ -90,7 +90,7 @@ public class League {
         if(week == 1){
             startSeason();
         }
-        if(week < 25) {
+        if(week < 16) {
             for (int i = 0; i < 8; i++) {
                 Team homeTeam = homeTeams.get(i).getTeam();
                 Team awayTeam = awayTeams.get(i).getTeam();

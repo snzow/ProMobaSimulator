@@ -72,7 +72,7 @@ public class World {
             int inp = kb.nextInt();
             LadderGame ladderGame = new LadderGame();
             if (inp == 1) {
-                if (seasonProgress == 25|| (year == 1 && seasonProgress == events.size())){
+                if (seasonProgress == 16|| (year == 1 && seasonProgress == events.size())){
                     seasonProgress = 0;
                     year++;
                     runFreeAgency(false);
@@ -87,7 +87,7 @@ public class World {
                     patchThisYear = true;
                     continue;
                 }
-                if(seasonProgress == 24){
+                if(seasonProgress == 15){
                     events.get(0).runTournament(leagueList.get(0).getTeams());
                 }
                 else {
@@ -95,7 +95,7 @@ public class World {
                         for(League l : leagueList){
                             l.playWeek();
                         }
-                        if(leagueList.get(0).week == 25){
+                        if(leagueList.get(0).week == 15){
                             ArrayList<Team> proRelTournamentList = new ArrayList<>();
                             ArrayList<Team> majorLeagueRel = leagueList.get(0).getRelegationCandidates();
                             ArrayList<Team> minorLeaguePro = leagueList.get(1).getPromotionCandidates();

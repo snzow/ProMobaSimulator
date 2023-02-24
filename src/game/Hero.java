@@ -16,14 +16,14 @@ public class Hero {
 
     double hp;
 
-    int picksP;
-    int winsP;
-    int lossesP;
+    int picksThisPatch;
+    int winsThisPatch;
+    int lossesThisPatch;
     int wins;
     int losses;
     int picks;
     int bans;
-    int bansP;
+    int bansThisPatch;
 
     double previousPatchStrength;
 
@@ -31,56 +31,56 @@ public class Hero {
         name = n;
         dmg = World.getRandomNumber(80,120);
         hp = World.getRandomNumber(800,1200);
-        picksP = 0;
-        winsP = 0;
-        lossesP = 0;
+        picksThisPatch = 0;
+        winsThisPatch = 0;
+        lossesThisPatch = 0;
         wins = 0;
         losses = 0;
         picks = 0;
         bans = 0;
-        bansP = 0;
+        bansThisPatch = 0;
         previousPatchStrength = dmg*10 + hp;
     }
 
     public void pickHero(){
-        picksP++;
+        picksThisPatch++;
         picks++;
     }
     public void incrementWins(){
-        winsP++;
+        winsThisPatch++;
         wins++;
     }
 
     public void incrementLosses(){
-        lossesP++;
+        lossesThisPatch++;
         losses++;
     }
     public void incrementBans(){
         bans++;
-        bansP++;
+        bansThisPatch++;
     }
 
     public int getWins(){
-        return winsP;
+        return winsThisPatch;
     }
 
     public int getLosses(){
-        return lossesP;
+        return lossesThisPatch;
     }
 
     public int getPicks(){
-        return picksP;
+        return picksThisPatch;
     }
 
     public int getContested(){
-        return picksP + bansP;
+        return picksThisPatch + bansThisPatch;
     }
 
     public double getWinrate(){
-        if(winsP+lossesP == 0){
+        if(winsThisPatch+lossesThisPatch == 0){
             return 0;
         }
-        double toReturn = (double)winsP/((double)(winsP + lossesP));
+        double toReturn = (double)winsThisPatch/((double)(winsThisPatch + lossesThisPatch));
         BigDecimal tmp = new BigDecimal(toReturn).setScale(2, RoundingMode.HALF_UP);
         toReturn = tmp.doubleValue();
         return toReturn;
@@ -135,14 +135,14 @@ public class Hero {
                 hp -= 150*randomSeed;
             }
         }
-        picksP = 0;
-        winsP = 0;
-        lossesP = 0;
-        bansP = 0;
+        picksThisPatch = 0;
+        winsThisPatch = 0;
+        lossesThisPatch = 0;
+        bansThisPatch = 0;
     }
 
     public String toStringAllStats(){
-        return name + " " + picksP + "/" + bansP + " Picks/Bans | " + getWinrate() + " Winrate | " + (int)(dmg*10 + hp) + " SI";
+        return name + " " + picksThisPatch + "/" + bansThisPatch + " Picks/Bans | " + (int)(100*getWinrate()) + "% Winrate | " + (int)(dmg*10 + hp) + " SI";
     }
 
     public String toStringNoWinrate(){

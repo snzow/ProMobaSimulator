@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.088 league almost complete. gotta go to work">
+    <list default="true" id="f5c429b0-c41c-44de-93c7-cf08df09c47d" name="Changes" comment="v0.09 Leagues working, promotion and Relegation. groundwork for NL">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Hero.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/League.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/League.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/PlayerContract.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/PlayerContract.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/world/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/Team.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/world/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/world/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,15 +35,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="World" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="world.World" />
