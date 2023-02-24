@@ -26,9 +26,9 @@ public class PlayerContract {
     }
 
     public void extendContract(double s, int y){
-        salary += team.balance/15;
-        salary *= s;
-        salary = Math.min(salary,600000);
+        salary = Math.max(salary, team.balance/15*s*World.getRandomNumber(900,1100)/1000);
+        //salary = Math.min(salary,850_000);
+        salary = salary;
         yearsRemaining += y;
     }
 

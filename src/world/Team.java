@@ -59,7 +59,8 @@ public class Team {
         addSigning(p);
         p.yearsWithTeam = 0;
         players.add(p);
-        p.signContract(this, Math.min((int) (balance/9),500000),1);
+        //p.signContract(this, Math.min((int) (balance/9),650_000),1);
+        p.signContract(this,(int)balance/20,1);
 
     }
 
@@ -189,6 +190,12 @@ public class Team {
         pointsL = pointsY/2;
         pointsY = 0;
         payPlayers();
+        if(this.getLeague() != null && this.getLeague().major){
+            this.balance -= 400_000;
+        }
+        else{
+            this.balance -= 100_000;
+        }
         tourneysWonY = 0;
         majorsWonY = 0;
         tiWonY = 0;
